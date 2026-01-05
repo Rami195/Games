@@ -106,10 +106,16 @@ const WORD_BANK = {
   ],
 };
 
-function clampInt(val, min, max) {
-  const n = Number.parseInt(val, 10);
-  if (Number.isNaN(n)) return min;
+/* ===== helpers numéricos seguros (NO traban input) ===== */
+function toNumberOrNaN(v) {
+  const n = Number.parseInt(String(v), 10);
+  return Number.isNaN(n) ? NaN : n;
+}
+function clamp(n, min, max) {
   return Math.max(min, Math.min(max, n));
+}
+function onlyDigitsOrEmpty(v) {
+  return v === "" || /^\d+$/.test(v);
 }
 
 function pickRandom(arr) {
@@ -133,19 +139,24 @@ function formatTime(totalSeconds) {
 
 export default function ImpostorGame() {
   const categories = useMemo(() => Object.keys(WORD_BANK), []);
-
-  // Cargamos estado guardado UNA VEZ al inicio
   const savedState = useMemo(() => loadGameState(), []);
 
   const [phase, setPhase] = useState(() => savedState?.phase ?? "setup"); // setup | reveal | debate | results
 
-  // Setup
-  const [playersCount, setPlayersCount] = useState(() => savedState?.playersCount ?? 6);
-  const [impostorsCount, setImpostorsCount] = useState(() => savedState?.impostorsCount ?? 1);
+  // ✅ Setup (inputs como STRING para no trabar)
+  const [playersCount, setPlayersCount] = useState(() =>
+    String(savedState?.playersCount ?? 6)
+  );
+  const [impostorsCount, setImpostorsCount] = useState(() =>
+    String(savedState?.impostorsCount ?? 1)
+  );
+  const [debateMinutes, setDebateMinutes] = useState(() =>
+    String(savedState?.debateMinutes ?? 3)
+  );
+
   const [selectedCategories, setSelectedCategories] = useState(
     () => savedState?.selectedCategories ?? [categories[0]].filter(Boolean)
   );
-  const [debateMinutes, setDebateMinutes] = useState(() => savedState?.debateMinutes ?? 3);
 
   // Game state
   const [secretWord, setSecretWord] = useState(() => savedState?.secretWord ?? "");
@@ -157,14 +168,36 @@ export default function ImpostorGame() {
   const [debateSecondsLeft, setDebateSecondsLeft] = useState(() => savedState?.debateSecondsLeft ?? 0);
   const [isTimerRunning, setIsTimerRunning] = useState(() => savedState?.isTimerRunning ?? false);
 
+  // ✅ valores numéricos derivados (para cálculos)
+  const playersCountNum = useMemo(() => {
+    const n = toNumberOrNaN(playersCount);
+    return Number.isNaN(n) ? 0 : n;
+  }, [playersCount]);
+
+  const impostorsCountNum = useMemo(() => {
+    const n = toNumberOrNaN(impostorsCount);
+    return Number.isNaN(n) ? 0 : n;
+  }, [impostorsCount]);
+
+  const debateMinutesNum = useMemo(() => {
+    const n = toNumberOrNaN(debateMinutes);
+    return Number.isNaN(n) ? 0 : n;
+  }, [debateMinutes]);
+
+  const maxImpostors = Math.max(1, (playersCountNum || 3) - 1);
+
   // Guardar estado en localStorage cuando cambie
   useEffect(() => {
+    const safePlayers = playersCountNum || (savedState?.playersCount ?? 6);
+    const safeImpostors = impostorsCountNum || (savedState?.impostorsCount ?? 1);
+    const safeDebate = debateMinutesNum || (savedState?.debateMinutes ?? 3);
+
     const stateToSave = {
       phase,
-      playersCount,
-      impostorsCount,
+      playersCount: safePlayers,
+      impostorsCount: safeImpostors,
       selectedCategories,
-      debateMinutes,
+      debateMinutes: safeDebate,
       secretWord,
       players,
       impostorIndexes,
@@ -175,24 +208,36 @@ export default function ImpostorGame() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
   }, [
     phase,
-    playersCount,
-    impostorsCount,
+    playersCountNum,
+    impostorsCountNum,
+    debateMinutesNum,
     selectedCategories,
-    debateMinutes,
     secretWord,
     players,
     impostorIndexes,
     openPlayerId,
     debateSecondsLeft,
     isTimerRunning,
+    savedState?.playersCount,
+    savedState?.impostorsCount,
+    savedState?.debateMinutes,
   ]);
 
-  // Validación dinámica: impostores <= jugadores-1
+  // ✅ Validación dinámica SIN trabar inputs
+  // (cuando cambia playersCount, si los impostores quedan fuera de rango, los ajusta)
   useEffect(() => {
-    const maxImpostors = Math.max(1, playersCount - 1);
-    if (impostorsCount > maxImpostors) setImpostorsCount(maxImpostors);
-    if (playersCount < 3) setPlayersCount(3);
-  }, [playersCount, impostorsCount]);
+    if (!playersCountNum) return;
+
+    const safePlayers = clamp(playersCountNum, 3, 20);
+    if (safePlayers !== playersCountNum) {
+      setPlayersCount(String(safePlayers));
+      return;
+    }
+
+    const maxI = Math.max(1, safePlayers - 1);
+    if (impostorsCountNum > maxI) setImpostorsCount(String(maxI));
+    if (impostorsCountNum < 1 && impostorsCount !== "") setImpostorsCount("1");
+  }, [playersCountNum, impostorsCountNum]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Timer
   useEffect(() => {
@@ -213,16 +258,25 @@ export default function ImpostorGame() {
   }
 
   function startGame() {
+    const pCount = clamp(playersCountNum || 6, 3, 20);
+    const iCount = clamp(impostorsCountNum || 1, 1, Math.max(1, pCount - 1));
+    const dMins = clamp(debateMinutesNum || 3, 1, 15);
+
+    if (selectedCategories.length === 0) {
+      alert("Elegí al menos una categoría.");
+      return;
+    }
+
     const allWords = selectedCategories.flatMap((c) => WORD_BANK[c] ?? []);
     const word = allWords.length > 0 ? pickRandom(allWords) : "PALABRA";
     setSecretWord(word);
 
-    const indices = shuffle([...Array(playersCount)].map((_, i) => i)).slice(0, impostorsCount);
+    const indices = shuffle([...Array(pCount)].map((_, i) => i)).slice(0, iCount);
     indices.sort((a, b) => a - b);
     setImpostorIndexes(indices);
 
-    const newPlayers = Array.from({ length: playersCount }, (_, i) => ({
-      id: crypto.randomUUID(),
+    const newPlayers = Array.from({ length: pCount }, (_, i) => ({
+      id: (typeof crypto !== "undefined" && crypto.randomUUID) ? crypto.randomUUID() : `${Date.now()}-${i}`,
       name: `Jugador ${i + 1}`,
       isImpostor: indices.includes(i),
     }));
@@ -232,7 +286,7 @@ export default function ImpostorGame() {
 
     setPhase("reveal");
     setIsTimerRunning(false);
-    setDebateSecondsLeft(debateMinutes * 60);
+    setDebateSecondsLeft(dMins * 60);
   }
 
   function toggleReveal(playerId) {
@@ -240,9 +294,10 @@ export default function ImpostorGame() {
   }
 
   function beginDebate() {
+    const dMins = clamp(debateMinutesNum || 3, 1, 15);
     setOpenPlayerId(null);
     setPhase("debate");
-    setDebateSecondsLeft(debateMinutes * 60);
+    setDebateSecondsLeft(dMins * 60);
     setIsTimerRunning(true);
   }
 
@@ -260,9 +315,13 @@ export default function ImpostorGame() {
     setOpenPlayerId(null);
     setIsTimerRunning(false);
     setDebateSecondsLeft(0);
-  }
 
-  const maxImpostors = Math.max(1, playersCount - 1);
+    // opcional: reset de setup
+    setPlayersCount("6");
+    setImpostorsCount("1");
+    setDebateMinutes("3");
+    setSelectedCategories([categories[0]].filter(Boolean));
+  }
 
   const totalWords = selectedCategories.reduce((acc, c) => acc + (WORD_BANK[c]?.length ?? 0), 0);
 
@@ -300,7 +359,17 @@ export default function ImpostorGame() {
                 value={playersCount}
                 min={3}
                 max={20}
-                onChange={(e) => setPlayersCount(clampInt(e.target.value, 3, 20))}
+                inputMode="numeric"
+                onChange={(e) => {
+                  const v = e.target.value;
+                  if (!onlyDigitsOrEmpty(v)) return;
+                  setPlayersCount(v);
+                }}
+                onBlur={() => {
+                  const n = toNumberOrNaN(playersCount);
+                  if (Number.isNaN(n)) setPlayersCount("6");
+                  else setPlayersCount(String(clamp(n, 3, 20)));
+                }}
                 className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
               />
             </div>
@@ -312,7 +381,17 @@ export default function ImpostorGame() {
                 value={impostorsCount}
                 min={1}
                 max={maxImpostors}
-                onChange={(e) => setImpostorsCount(clampInt(e.target.value, 1, maxImpostors))}
+                inputMode="numeric"
+                onChange={(e) => {
+                  const v = e.target.value;
+                  if (!onlyDigitsOrEmpty(v)) return;
+                  setImpostorsCount(v);
+                }}
+                onBlur={() => {
+                  const n = toNumberOrNaN(impostorsCount);
+                  if (Number.isNaN(n)) setImpostorsCount("1");
+                  else setImpostorsCount(String(clamp(n, 1, maxImpostors)));
+                }}
                 className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
               />
               <p className="text-xs text-slate-400">
@@ -359,7 +438,17 @@ export default function ImpostorGame() {
                 value={debateMinutes}
                 min={1}
                 max={15}
-                onChange={(e) => setDebateMinutes(clampInt(e.target.value, 1, 15))}
+                inputMode="numeric"
+                onChange={(e) => {
+                  const v = e.target.value;
+                  if (!onlyDigitsOrEmpty(v)) return;
+                  setDebateMinutes(v);
+                }}
+                onBlur={() => {
+                  const n = toNumberOrNaN(debateMinutes);
+                  if (Number.isNaN(n)) setDebateMinutes("3");
+                  else setDebateMinutes(String(clamp(n, 1, 15)));
+                }}
                 className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
               />
             </div>
@@ -398,7 +487,7 @@ export default function ImpostorGame() {
               onClick={beginDebate}
               className="rounded-2xl bg-white/10 px-5 py-3 font-semibold hover:bg-white/15"
             >
-              Iniciar debate ({debateMinutes} min)
+              Iniciar debate ({clamp(debateMinutesNum || 3, 1, 15)} min)
             </button>
           </div>
 
@@ -514,8 +603,6 @@ export default function ImpostorGame() {
 
 /**
  * Card sin rotación: se “destapa” ocupando toda la card.
- * - No se invierte el texto.
- * - No se desborda.
  */
 function SimpleRevealCard({ title, isOpen, onToggle, backContent }) {
   return (
@@ -537,7 +624,7 @@ function SimpleRevealCard({ title, isOpen, onToggle, backContent }) {
         </div>
       </div>
 
-      {/* BACK (ocupa toda la card) */}
+      {/* BACK */}
       <div
         className={[
           "absolute inset-0 p-4 transition-opacity duration-200 bg-black/40",
