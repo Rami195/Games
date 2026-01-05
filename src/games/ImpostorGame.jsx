@@ -226,18 +226,20 @@ export default function ImpostorGame() {
   // ✅ Validación dinámica SIN trabar inputs
   // (cuando cambia playersCount, si los impostores quedan fuera de rango, los ajusta)
   useEffect(() => {
-    if (!playersCountNum) return;
+    // Solo ajustar impostores cuando playersCount es un número válido (y ya fue seteado)
+    if (!playersCountNum || playersCount === "") return;
 
-    const safePlayers = clamp(playersCountNum, 3, 20);
-    if (safePlayers !== playersCountNum) {
-      setPlayersCount(String(safePlayers));
-      return;
-    }
+    const maxI = Math.max(1, playersCountNum - 1);
 
-    const maxI = Math.max(1, safePlayers - 1);
-    if (impostorsCountNum > maxI) setImpostorsCount(String(maxI));
-    if (impostorsCountNum < 1 && impostorsCount !== "") setImpostorsCount("1");
-  }, [playersCountNum, impostorsCountNum]); // eslint-disable-line react-hooks/exhaustive-deps
+    // si impostorsCount está vacío, lo dejamos (no molestamos mientras escribe)
+    if (impostorsCount === "") return;
+
+    const i = impostorsCountNum;
+    if (!i) return;
+
+    if (i > maxI) setImpostorsCount(String(maxI));
+    if (i < 1) setImpostorsCount("1");
+  }, [playersCountNum, playersCount, impostorsCount, impostorsCountNum]);
 
   // Timer
   useEffect(() => {
@@ -355,11 +357,10 @@ export default function ImpostorGame() {
             <div className="space-y-2">
               <label className="text-sm text-slate-300">Cantidad de jugadores (min 3)</label>
               <input
-                type="number"
+                type="text"
                 value={playersCount}
-                min={3}
-                max={20}
                 inputMode="numeric"
+                pattern="\d*"
                 onChange={(e) => {
                   const v = e.target.value;
                   if (!onlyDigitsOrEmpty(v)) return;
@@ -367,11 +368,15 @@ export default function ImpostorGame() {
                 }}
                 onBlur={() => {
                   const n = toNumberOrNaN(playersCount);
-                  if (Number.isNaN(n)) setPlayersCount("6");
-                  else setPlayersCount(String(clamp(n, 3, 20)));
+                  if (Number.isNaN(n)) {
+                    setPlayersCount("6");
+                  } else {
+                    setPlayersCount(String(clamp(n, 3, 20)));
+                  }
                 }}
                 className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
               />
+
             </div>
 
             <div className="space-y-2">
