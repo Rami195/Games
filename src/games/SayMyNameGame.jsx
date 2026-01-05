@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-const STORAGE_KEY = "saymyname-game-state";
+const STORAGE_KEY = "saymyname-game-state-v2";
 
 function loadState() {
   try {
@@ -20,18 +20,13 @@ function shuffle(arr) {
   return a;
 }
 
-function clampInt(v, min, max) {
-  const n = Number.parseInt(v, 10);
-  if (Number.isNaN(n)) return min;
-  return Math.max(min, Math.min(max, n));
-}
-
 function formatTime(totalSeconds) {
   const m = Math.floor(totalSeconds / 60);
   const s = totalSeconds % 60;
   return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
+// ---------- Banco de cartas ----------
 const CARD_BANK = {
   "Películas/Series": [
     "El Padrino", "Titanic", "Matrix", "Inception", "Interstellar", "Joker", "Gladiador", "Pulp Fiction",
@@ -80,52 +75,25 @@ const CARD_BANK = {
   ],
 };
 
+// ---------- Rondas ----------
 const ROUNDS = [
-  {
-    id: 1,
-    name: "Ronda 1",
-    baseSeconds: 30,
-    can: "Hablar, actuar, hacer sonidos, señalar, cantar, tararear.",
-    cant: "Decir la palabra o una parte clara de la palabra.",
-  },
-  {
-    id: 2,
-    name: "Ronda 2",
-    baseSeconds: 30,
-    can: "Decir UNA sola palabra y actuar.",
-    cant: "Decir la palabra, tararear/cantar, hacer sonidos.",
-  },
-  {
-    id: 3,
-    name: "Ronda 3",
-    baseSeconds: 30,
-    can: "Solo actuar.",
-    cant: "Hacer sonidos o decir cualquier palabra.",
-  },
-  {
-    id: 4,
-    name: "Ronda ⚡",
-    baseSeconds: 15,
-    can: "Un intento por tarjeta. Rápido.",
-    cant: "Dormirse 😅",
-  },
+  { id: 1, name: "Ronda 1", baseSeconds: 30, can: "Hablar, actuar, hacer sonidos, señalar, cantar, tararear.", cant: "Decir la palabra o una parte clara de la palabra." },
+  { id: 2, name: "Ronda 2", baseSeconds: 30, can: "Decir UNA sola palabra y actuar.", cant: "Decir la palabra, tararear/cantar, hacer sonidos." },
+  { id: 3, name: "Ronda 3", baseSeconds: 30, can: "Solo actuar.", cant: "Hacer sonidos o decir cualquier palabra." },
+  { id: 4, name: "Ronda ⚡", baseSeconds: 15, can: "Un intento por tarjeta. Rápido.", cant: "Dormirse 😅" },
 ];
 
-// 👇 Un “theme” completo por equipo (todo el layout se tiñe)
+// Theme completo por equipo
 const TEAM_THEME = [
   {
     name: "Azul",
-    // Background general del panel del juego
     pageBg: "bg-gradient-to-br from-sky-950/35 via-slate-950/30 to-black/40",
-    // Bordes y acentos
     border: "border-sky-400/25",
     ring: "ring-sky-400/25",
     softBg: "bg-sky-500/5",
-    // Textos / badges
     dot: "text-sky-300",
     badgeBg: "bg-sky-500/15",
     badgeText: "text-sky-200",
-    // Palabra (color principal del equipo)
     word: "text-sky-200",
   },
   {
@@ -163,22 +131,45 @@ const TEAM_THEME = [
   },
 ];
 
+function safeUUID() {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+// ✅ helpers para inputs numéricos controlados (string while typing)
+function toNumberOrNaN(v) {
+  const n = Number.parseInt(String(v), 10);
+  return Number.isNaN(n) ? NaN : n;
+}
+function clampNumber(n, min, max) {
+  return Math.max(min, Math.min(max, n));
+}
+function onlyDigitsOrEmpty(v) {
+  return v === "" || /^\d+$/.test(v);
+}
+
 export default function SayMyNameGame({ onPlayingChange }) {
   const categories = useMemo(() => Object.keys(CARD_BANK), []);
   const saved = useMemo(() => loadState(), []);
 
+  // phase: setup -> draft -> play -> results
   const [phase, setPhase] = useState(() => saved?.phase ?? "setup");
+
+  // ✅ teamsCount lo dejamos numérico (no suele necesitar borrado completo)
   const [teamsCount, setTeamsCount] = useState(() => saved?.teamsCount ?? 2);
-  const [cardsPerTeam, setCardsPerTeam] = useState(() => saved?.cardsPerTeam ?? 20);
-  const [confirmReset, setConfirmReset] = useState(false);
+
+  // ✅ deckTotal como STRING para no trabar el input (desktop/mobile)
+  const [deckTotal, setDeckTotal] = useState(() => {
+    const initial = saved?.deckTotal ?? 30;
+    return String(initial);
+  });
+
   const [selectedCategories, setSelectedCategories] = useState(
     () => saved?.selectedCategories ?? [categories[0]].filter(Boolean)
   );
 
   const [membersPerTeam, setMembersPerTeam] = useState(
-    () =>
-      saved?.membersPerTeam ??
-      Array.from({ length: saved?.teamsCount ?? 2 }, () => 2)
+    () => saved?.membersPerTeam ?? Array.from({ length: saved?.teamsCount ?? 2 }, () => 2)
   );
 
   const [roundIndex, setRoundIndex] = useState(() => saved?.roundIndex ?? 0);
@@ -190,44 +181,37 @@ export default function SayMyNameGame({ onPlayingChange }) {
     () => saved?.scores ?? Array.from({ length: 2 }, () => 0)
   );
 
+  // mazo final del juego (sale del draft)
   const [deck, setDeck] = useState(() => saved?.deck ?? []);
 
+  // timer
   const [secondsLeft, setSecondsLeft] = useState(() => saved?.secondsLeft ?? 0);
   const [running, setRunning] = useState(() => saved?.running ?? false);
+
+  // reset confirm
+  const [confirmReset, setConfirmReset] = useState(() => saved?.confirmReset ?? false);
+
+  // draft states
+  const [draftParticipants, setDraftParticipants] = useState(() => saved?.draftParticipants ?? []);
+  const [draftIndex, setDraftIndex] = useState(() => saved?.draftIndex ?? 0);
 
   const round = ROUNDS[roundIndex];
   const topCard = deck?.[0] ?? null;
 
   const theme = TEAM_THEME[currentTeam] ?? TEAM_THEME[0];
 
-  function getTurnSeconds() {
-    return ROUNDS[roundIndex]?.baseSeconds ?? 30;
-  }
+  // ✅ número real de deckTotal (cuando hace falta)
+  const deckTotalNum = useMemo(() => {
+    const n = toNumberOrNaN(deckTotal);
+    return Number.isNaN(n) ? 0 : n;
+  }, [deckTotal]);
 
-  const totalTurnsThisRound = useMemo(() => {
-    const sum = membersPerTeam.reduce((acc, n) => acc + (n ?? 0), 0);
-    return Math.max(1, sum);
-  }, [membersPerTeam]);
-
-  function toggleCategory(cat) {
-    setSelectedCategories((prev) =>
-      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
-    );
-  }
-
-  function buildCardsPool() {
-    return selectedCategories.flatMap((c) =>
-      (CARD_BANK[c] ?? []).map((answer) => ({
-        id: crypto.randomUUID(),
-        answer,
-        category: c,
-      }))
-    );
-  }
+  // Avisar al App: “estoy jugando” para ocultar volver al menú
   useEffect(() => {
     onPlayingChange?.(phase === "play");
   }, [phase, onPlayingChange]);
 
+  // Ajustar arrays si cambia teamsCount
   useEffect(() => {
     setScores((prev) => Array.from({ length: teamsCount }, (_, i) => prev?.[i] ?? 0));
     setMembersPerTeam((prev) => Array.from({ length: teamsCount }, (_, i) => prev?.[i] ?? 2));
@@ -236,11 +220,15 @@ export default function SayMyNameGame({ onPlayingChange }) {
     setCurrentSlot((s) => Math.max(0, s));
   }, [teamsCount]);
 
+  // Persistencia (guardamos deckTotal como número si es válido, sino guardamos el último válido o 30)
   useEffect(() => {
+    const n = toNumberOrNaN(deckTotal);
+    const safeDeckTotal = Number.isNaN(n) ? (saved?.deckTotal ?? 30) : n;
+
     const stateToSave = {
       phase,
       teamsCount,
-      cardsPerTeam,
+      deckTotal: safeDeckTotal,
       selectedCategories,
       membersPerTeam,
       roundIndex,
@@ -251,12 +239,15 @@ export default function SayMyNameGame({ onPlayingChange }) {
       deck,
       secondsLeft,
       running,
+      confirmReset,
+      draftParticipants,
+      draftIndex,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
   }, [
     phase,
     teamsCount,
-    cardsPerTeam,
+    deckTotal,
     selectedCategories,
     membersPerTeam,
     roundIndex,
@@ -267,8 +258,193 @@ export default function SayMyNameGame({ onPlayingChange }) {
     deck,
     secondsLeft,
     running,
+    confirmReset,
+    draftParticipants,
+    draftIndex,
+    saved?.deckTotal,
   ]);
 
+  // Si cambia de fase, cerramos confirmación
+  useEffect(() => {
+    setConfirmReset(false);
+  }, [phase]);
+
+  const totalParticipants = useMemo(() => {
+    const sum = membersPerTeam.reduce((acc, n) => acc + (n ?? 0), 0);
+    return Math.max(1, sum);
+  }, [membersPerTeam]);
+
+  const totalTurnsThisRound = totalParticipants;
+
+  const quotaPerParticipant = useMemo(() => {
+    if (deckTotalNum <= 0) return 0;
+    return Math.floor(deckTotalNum / totalParticipants);
+  }, [deckTotalNum, totalParticipants]);
+
+  const samplePerParticipant = useMemo(() => quotaPerParticipant * 2, [quotaPerParticipant]);
+
+  const poolCount = selectedCategories.reduce((acc, c) => acc + (CARD_BANK[c]?.length ?? 0), 0);
+  const canStartDraft = selectedCategories.length > 0;
+
+  function toggleCategory(cat) {
+    setSelectedCategories((prev) =>
+      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
+    );
+  }
+
+  function buildCardsPool() {
+    const pool = selectedCategories.flatMap((c) =>
+      (CARD_BANK[c] ?? []).map((answer) => ({
+        id: safeUUID(),
+        answer,
+        category: c,
+      }))
+    );
+    return shuffle(pool);
+  }
+
+  // orden de participantes: slot 0 team 0..N, slot 1 team 0..N ...
+  function buildParticipantsList() {
+    const participants = [];
+    const maxSlots = Math.max(1, ...membersPerTeam.map((n) => n || 1));
+
+    for (let slot = 0; slot < maxSlots; slot++) {
+      for (let team = 0; team < teamsCount; team++) {
+        const members = membersPerTeam[team] ?? 1;
+        if (members > slot) {
+          participants.push({
+            id: `${team}-${slot}`,
+            team,
+            slot,
+            label: `Equipo ${team + 1} • Integrante ${slot + 1}/${members}`,
+            options: [],
+            picks: [],
+            quota: 0,
+            sampleCount: 0,
+          });
+        }
+      }
+    }
+    return participants;
+  }
+
+  function startDraft() {
+    const pool = buildCardsPool();
+    const total = deckTotalNum;
+
+    if (!Number.isInteger(total) || total <= 0) {
+      alert("Ingresá un tamaño de mazo válido.");
+      return;
+    }
+
+    if (total % totalParticipants !== 0) {
+      alert(
+        `El tamaño del mazo (${total}) debe ser múltiplo del total de participantes (${totalParticipants}).`
+      );
+      return;
+    }
+
+    const quota = total / totalParticipants; // ej 5
+    const sampleCount = quota * 2; // ej 10
+
+    if (sampleCount <= 0) {
+      alert("El tamaño del mazo es muy chico para armar selección.");
+      return;
+    }
+
+    let bag = [...pool];
+
+    const participants = buildParticipantsList().map((p) => {
+      if (bag.length < sampleCount) {
+        bag = shuffle(pool);
+      }
+
+      const options = bag.slice(0, sampleCount);
+      bag = bag.slice(sampleCount);
+
+      return {
+        ...p,
+        options,
+        picks: [],
+        quota,
+        sampleCount,
+      };
+    });
+
+    setDraftParticipants(participants);
+    setDraftIndex(0);
+
+    // limpiar juego previo
+    setDeck([]);
+    setScores(Array.from({ length: teamsCount }, () => 0));
+    setRoundIndex(0);
+    setCurrentTeam(0);
+    setCurrentSlot(0);
+    setTurnsDone(0);
+    setSecondsLeft(ROUNDS[0].baseSeconds);
+    setRunning(false);
+
+    setPhase("draft");
+  }
+
+  function togglePick(cardId) {
+    setDraftParticipants((prev) => {
+      const copy = [...prev];
+      const p = copy[draftIndex];
+      if (!p) return prev;
+
+      const picks = new Set(p.picks);
+      if (picks.has(cardId)) picks.delete(cardId);
+      else picks.add(cardId);
+
+      if (picks.size > p.quota) return prev;
+
+      copy[draftIndex] = { ...p, picks: Array.from(picks) };
+      return copy;
+    });
+  }
+
+  function finalizeDraftToDeck() {
+    const chosen = draftParticipants.flatMap((pp) =>
+      pp.options.filter((c) => pp.picks.includes(c.id))
+    );
+
+    if (chosen.length !== deckTotalNum) {
+      alert(`Error: mazo final tiene ${chosen.length} cartas y debería tener ${deckTotalNum}.`);
+      return;
+    }
+
+    setDeck(shuffle(chosen));
+
+    setScores(Array.from({ length: teamsCount }, () => 0));
+    setRoundIndex(0);
+    setCurrentTeam(0);
+    setCurrentSlot(0);
+    setTurnsDone(0);
+    setSecondsLeft(ROUNDS[0].baseSeconds);
+    setRunning(false);
+
+    setPhase("play");
+  }
+
+  function nextParticipantDraft() {
+    const p = draftParticipants[draftIndex];
+    if (!p) return;
+
+    if (p.picks.length !== p.quota) {
+      alert(`Tenés que elegir exactamente ${p.quota} cartas.`);
+      return;
+    }
+
+    if (draftIndex < draftParticipants.length - 1) {
+      setDraftIndex(draftIndex + 1);
+      return;
+    }
+
+    finalizeDraftToDeck();
+  }
+
+  // --- TURNO SALTEADO (play) ---
   function getNextTurn(team, slot) {
     const maxSlots = Math.max(1, ...membersPerTeam.map((n) => n || 1));
 
@@ -287,11 +463,14 @@ export default function SayMyNameGame({ onPlayingChange }) {
     return { team: 0, slot: 0 };
   }
 
+  function getTurnSeconds() {
+    return ROUNDS[roundIndex]?.baseSeconds ?? 30;
+  }
+
   function autoAdvanceRoundIfNeeded(nextTurnsDone) {
     if (nextTurnsDone < totalTurnsThisRound) return false;
 
     const nextRoundIndex = roundIndex + 1;
-
     if (nextRoundIndex >= ROUNDS.length) {
       setPhase("results");
       setRunning(false);
@@ -307,7 +486,9 @@ export default function SayMyNameGame({ onPlayingChange }) {
     return true;
   }
 
+  // Timer
   useEffect(() => {
+    if (phase !== "play") return;
     if (!running) return;
 
     if (secondsLeft <= 0) {
@@ -331,47 +512,17 @@ export default function SayMyNameGame({ onPlayingChange }) {
     const t = setInterval(() => setSecondsLeft((s) => s - 1), 1000);
     return () => clearInterval(t);
   }, [
+    phase,
     running,
     secondsLeft,
+    turnsDone,
+    roundIndex,
     currentTeam,
     currentSlot,
-    membersPerTeam,
     teamsCount,
-    roundIndex,
-    turnsDone,
+    membersPerTeam,
     totalTurnsThisRound,
   ]);
-
-  function startGame() {
-    const pool = buildCardsPool();
-    const need = Math.max(10, cardsPerTeam * teamsCount);
-    const baseDeck = shuffle(pool).slice(0, Math.min(pool.length, need));
-
-    setDeck(baseDeck);
-
-    setScores(Array.from({ length: teamsCount }, () => 0));
-    setRoundIndex(0);
-    setCurrentTeam(0);
-    setCurrentSlot(0);
-    setTurnsDone(0);
-
-    setSecondsLeft(ROUNDS[0].baseSeconds);
-    setRunning(false);
-    setPhase("play");
-  }
-
-  function resetAll() {
-    localStorage.removeItem(STORAGE_KEY);
-    setPhase("setup");
-    setRoundIndex(0);
-    setCurrentTeam(0);
-    setCurrentSlot(0);
-    setTurnsDone(0);
-    setScores(Array.from({ length: 2 }, () => 0));
-    setDeck([]);
-    setSecondsLeft(0);
-    setRunning(false);
-  }
 
   function startTurn() {
     setSecondsLeft(getTurnSeconds());
@@ -393,11 +544,41 @@ export default function SayMyNameGame({ onPlayingChange }) {
     setDeck((prev) => (prev.length <= 1 ? prev : [...prev.slice(1), prev[0]]));
   }
 
-  const poolCount = selectedCategories.reduce((acc, c) => acc + (CARD_BANK[c]?.length ?? 0), 0);
-  const canStart = selectedCategories.length > 0;
+  function resetAll() {
+    localStorage.removeItem(STORAGE_KEY);
+
+    setPhase("setup");
+
+    setTeamsCount(2);
+    setDeckTotal("30"); // ✅ string
+
+    setSelectedCategories([categories[0]].filter(Boolean));
+    setMembersPerTeam([2, 2]);
+
+    setRoundIndex(0);
+    setCurrentTeam(0);
+    setCurrentSlot(0);
+    setTurnsDone(0);
+
+    setScores([0, 0]);
+    setDeck([]);
+
+    setSecondsLeft(0);
+    setRunning(false);
+
+    setDraftParticipants([]);
+    setDraftIndex(0);
+
+    setConfirmReset(false);
+  }
 
   const memberNumberHuman = currentSlot + 1;
   const membersThisTeam = membersPerTeam[currentTeam] ?? 1;
+
+  // Validación del draft
+  const draftValidMultiple = deckTotalNum > 0 && deckTotalNum % totalParticipants === 0;
+  const quota = draftValidMultiple ? deckTotalNum / totalParticipants : 0;
+  const sampleCount = quota * 2;
 
   return (
     <div className="space-y-4">
@@ -407,12 +588,12 @@ export default function SayMyNameGame({ onPlayingChange }) {
           <div>
             <h2 className="text-2xl font-bold">🎤 Say My Name</h2>
             <p className="text-slate-300">
-              Mazo compartido + tema por equipo (background cambia según el turno).
+              Selección por participantes (draft) + turnos automáticos + mazo compartido.
             </p>
           </div>
 
           {phase !== "setup" && (
-            <div className="relative">
+            <div className="flex items-center gap-2">
               {!confirmReset ? (
                 <button
                   onClick={() => setConfirmReset(true)}
@@ -421,23 +602,21 @@ export default function SayMyNameGame({ onPlayingChange }) {
                   Reiniciar
                 </button>
               ) : (
-                <div className="flex items-center gap-2">
+                <>
                   <span className="text-sm text-slate-300">¿Seguro?</span>
-
                   <button
                     onClick={resetAll}
                     className="rounded-xl bg-rose-500 px-3 py-2 text-sm font-semibold text-black hover:bg-rose-400"
                   >
                     Sí, reiniciar
                   </button>
-
                   <button
                     onClick={() => setConfirmReset(false)}
                     className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm hover:bg-white/10"
                   >
                     Cancelar
                   </button>
-                </div>
+                </>
               )}
             </div>
           )}
@@ -457,27 +636,48 @@ export default function SayMyNameGame({ onPlayingChange }) {
                 value={teamsCount}
                 min={2}
                 max={4}
-                onChange={(e) => setTeamsCount(clampInt(e.target.value, 2, 4))}
+                onChange={(e) => {
+                  const v = toNumberOrNaN(e.target.value);
+                  if (Number.isNaN(v)) return;
+                  setTeamsCount(clampNumber(v, 2, 4));
+                }}
                 className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
               />
             </div>
 
+            {/* ✅ FIX: deckTotal input no se traba (string while typing) */}
             <div className="space-y-2">
-              <label className="text-sm text-slate-300">
-                Tamaño del mazo (cartasPorEquipo × equipos)
-              </label>
+              <label className="text-sm text-slate-300">Tamaño del mazo total (ej: 30)</label>
               <input
                 type="number"
-                value={cardsPerTeam}
+                value={deckTotal}
                 min={10}
-                max={80}
-                onChange={(e) => setCardsPerTeam(clampInt(e.target.value, 10, 80))}
+                max={200}
+                inputMode="numeric"
+                onChange={(e) => {
+                  const v = e.target.value;
+                  if (!onlyDigitsOrEmpty(v)) return; // seguridad extra
+                  setDeckTotal(v); // permite "" para borrar
+                }}
+                onBlur={() => {
+                  const n = toNumberOrNaN(deckTotal);
+                  if (Number.isNaN(n)) {
+                    setDeckTotal("10");
+                  } else {
+                    setDeckTotal(String(clampNumber(n, 10, 200)));
+                  }
+                }}
                 className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
               />
+              <div className="text-xs text-slate-400">
+                Debe ser múltiplo del total de participantes ({totalParticipants}).
+              </div>
             </div>
 
+            {/* Integrantes por equipo */}
             <div className="space-y-2 sm:col-span-2">
               <label className="text-sm text-slate-300">Integrantes por equipo</label>
+
               <div className="grid gap-2 sm:grid-cols-2">
                 {Array.from({ length: teamsCount }, (_, i) => {
                   const t = TEAM_THEME[i] ?? TEAM_THEME[0];
@@ -485,17 +685,25 @@ export default function SayMyNameGame({ onPlayingChange }) {
                     <div key={i} className="rounded-xl border border-white/10 bg-black/20 p-3">
                       <div className="text-xs text-slate-300 mb-2">
                         Equipo {i + 1}{" "}
-                        <span className={["ml-2 rounded-lg px-2 py-0.5 text-[11px]", t.badgeBg, t.badgeText].join(" ")}>
+                        <span
+                          className={[
+                            "ml-2 rounded-lg px-2 py-0.5 text-[11px]",
+                            t.badgeBg,
+                            t.badgeText,
+                          ].join(" ")}
+                        >
                           {t.name}
                         </span>
                       </div>
                       <input
                         type="number"
                         min={1}
-                        max={10}
+                        max={12}
                         value={membersPerTeam[i] ?? 2}
                         onChange={(e) => {
-                          const v = clampInt(e.target.value, 1, 10);
+                          const n = toNumberOrNaN(e.target.value);
+                          if (Number.isNaN(n)) return;
+                          const v = clampNumber(n, 1, 12);
                           setMembersPerTeam((prev) => prev.map((x, idx) => (idx === i ? v : x)));
                         }}
                         className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
@@ -505,11 +713,27 @@ export default function SayMyNameGame({ onPlayingChange }) {
                 })}
               </div>
 
-              <p className="text-xs text-slate-400">
-                Total turnos por ronda: {totalTurnsThisRound}. 30s (R1–R3) y 15s (⚡).
-              </p>
+              <div className="mt-2 rounded-xl border border-white/10 bg-black/20 p-4 text-sm text-slate-200">
+                <div>
+                  Participantes totales: <b>{totalParticipants}</b>
+                </div>
+                <div className="mt-1 text-slate-300">
+                  {draftValidMultiple ? (
+                    <>
+                      Cada participante verá <b>{sampleCount}</b> cartas y elegirá{" "}
+                      <b>{quota}</b>. (Mazo final: {deckTotalNum})
+                    </>
+                  ) : (
+                    <>
+                      ⚠️ El mazo ({deckTotalNum || "—"}) <b>no</b> es múltiplo de {totalParticipants}.
+                      Ajustalo para poder iniciar.
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
 
+            {/* Categorías */}
             <div className="space-y-2 sm:col-span-2">
               <label className="text-sm text-slate-300">Categorías (podés elegir varias)</label>
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -541,42 +765,120 @@ export default function SayMyNameGame({ onPlayingChange }) {
           </div>
 
           <button
-            onClick={startGame}
-            disabled={!canStart}
+            onClick={startDraft}
+            disabled={!canStartDraft || !draftValidMultiple}
             className={[
               "mt-6 w-full rounded-2xl px-5 py-3 font-semibold transition",
-              !canStart
+              !canStartDraft || !draftValidMultiple
                 ? "cursor-not-allowed bg-emerald-500/20 text-emerald-200/40"
                 : "cursor-pointer bg-emerald-500 text-black hover:bg-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.6)]",
             ].join(" ")}
           >
-            Comenzar juego
+            Comenzar (selección de cartas)
           </button>
         </div>
       )}
 
-      {/* PLAY: el “tema” cambia en todo este bloque */}
+      {/* DRAFT */}
+      {phase === "draft" && draftParticipants.length > 0 && (() => {
+        const p = draftParticipants[draftIndex];
+        const t = TEAM_THEME[p.team] ?? TEAM_THEME[0];
+
+        const pickedCount = p.picks.length;
+        const mustPick = p.quota;
+
+        return (
+          <div className={["rounded-2xl border p-6 space-y-4 border-white/10", t.pageBg, t.softBg].join(" ")}>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <div className="text-sm text-slate-300">Selección de cartas</div>
+                <div className="text-xl font-bold">
+                  <span className={t.badgeText}>{p.label}</span>
+                </div>
+                <div className="text-xs text-slate-400 mt-1">
+                  Participante {draftIndex + 1}/{draftParticipants.length} • Elegí {p.quota} de {p.sampleCount}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    if (confirm("¿Volver a configuración? Se perderá la selección actual.")) {
+                      setPhase("setup");
+                      setDraftParticipants([]);
+                      setDraftIndex(0);
+                      setDeck([]);
+                      setRunning(false);
+                      setSecondsLeft(0);
+                    }
+                  }}
+                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm hover:bg-white/10"
+                >
+                  Volver a configuración
+                </button>
+
+                <button
+                  onClick={nextParticipantDraft}
+                  className={[
+                    "rounded-xl px-4 py-2 text-sm font-semibold text-black transition",
+                    pickedCount === mustPick
+                      ? "bg-emerald-500 hover:bg-emerald-400 cursor-pointer"
+                      : "bg-emerald-500/40 cursor-not-allowed",
+                  ].join(" ")}
+                  disabled={pickedCount !== mustPick}
+                >
+                  {draftIndex === draftParticipants.length - 1 ? "Terminar y jugar" : "Siguiente participante"}
+                </button>
+              </div>
+            </div>
+
+            <div className={["rounded-xl border bg-black/20 p-4", t.border].join(" ")}>
+              <div className="text-slate-200">
+                Seleccionadas: <b className={t.badgeText}>{pickedCount}</b> / {mustPick}
+              </div>
+              <div className="text-xs text-slate-400 mt-1">
+                Tocá una tarjeta para marcarla. No podés elegir más de {mustPick}.
+              </div>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              {p.options.map((c) => {
+                const checked = p.picks.includes(c.id);
+                return (
+                  <button
+                    key={c.id}
+                    onClick={() => togglePick(c.id)}
+                    className={[
+                      "text-left rounded-2xl border p-4 transition",
+                      checked
+                        ? [t.border, t.softBg, "ring-2", t.ring].join(" ")
+                        : "border-white/10 bg-black/20 hover:bg-black/30",
+                    ].join(" ")}
+                  >
+                    <div className="text-xs text-slate-400">{c.category}</div>
+                    <div className={["text-lg font-bold", checked ? t.badgeText : "text-white"].join(" ")}>
+                      {c.answer}
+                    </div>
+                    <div className="mt-2 text-xs text-slate-400">
+                      {checked ? "✅ Seleccionada" : "Tocar para seleccionar"}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* PLAY */}
       {phase === "play" && (
-        <div
-          className={[
-            "rounded-2xl border p-6 space-y-4",
-            "border-white/10",
-            theme.pageBg,
-            theme.softBg,
-          ].join(" ")}
-        >
+        <div className={["rounded-2xl border p-6 space-y-4 border-white/10", theme.pageBg, theme.softBg].join(" ")}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div className="text-sm text-slate-300">{round.name}</div>
 
               <div className="text-xl font-bold flex flex-wrap items-center gap-2">
-                <span
-                  className={[
-                    "inline-flex items-center gap-2 rounded-xl border px-3 py-1.5",
-                    "bg-black/20",
-                    theme.border,
-                  ].join(" ")}
-                >
+                <span className={["inline-flex items-center gap-2 rounded-xl border px-3 py-1.5 bg-black/20", theme.border].join(" ")}>
                   <span className={theme.dot}>●</span>
                   Equipo {currentTeam + 1}
                   <span className={["ml-2 rounded-lg px-2 py-0.5 text-[11px]", theme.badgeBg, theme.badgeText].join(" ")}>
@@ -592,7 +894,7 @@ export default function SayMyNameGame({ onPlayingChange }) {
               </div>
 
               <div className="mt-1 text-xs text-slate-400">
-                Turnos en esta ronda: {turnsDone}/{totalTurnsThisRound}
+                Turnos en esta ronda: {turnsDone}/{totalTurnsThisRound} • Cartas restantes: {deck.length}
               </div>
             </div>
 
@@ -624,13 +926,11 @@ export default function SayMyNameGame({ onPlayingChange }) {
             {scores.map((s, i) => {
               const t = TEAM_THEME[i] ?? TEAM_THEME[0];
               const isActive = i === currentTeam;
-
               return (
                 <div
                   key={i}
                   className={[
-                    "rounded-xl border bg-black/20 px-4 py-3",
-                    "border-white/10",
+                    "rounded-xl border bg-black/20 px-4 py-3 border-white/10",
                     isActive ? `ring-2 ${t.ring}` : "",
                   ].join(" ")}
                 >
@@ -646,6 +946,7 @@ export default function SayMyNameGame({ onPlayingChange }) {
             })}
           </div>
 
+          {/* Card: solo visible cuando corre el tiempo */}
           {!running ? (
             <div className={["rounded-2xl border bg-black/20 p-8 text-center", theme.border].join(" ")}>
               <div className="text-sm text-slate-300 mb-2">Turno preparado</div>
@@ -693,7 +994,9 @@ export default function SayMyNameGame({ onPlayingChange }) {
             </button>
           </div>
 
-          <div className="text-xs text-slate-400">Cartas restantes: {deck.length}</div>
+          <div className="text-xs text-slate-400">
+            Al terminar el tiempo cambia solo de jugador. Al terminar todos los turnos, avanza de ronda automáticamente.
+          </div>
         </div>
       )}
 
