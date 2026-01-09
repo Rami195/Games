@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-const STORAGE_KEY = "saymyname-game-state-v2";
+const STORAGE_KEY = "saymyname-game-state-v3";
 
 function loadState() {
   try {
@@ -29,49 +29,49 @@ function formatTime(totalSeconds) {
 // ---------- Banco de cartas ----------
 const CARD_BANK = {
   "Películas/Series": [
-    "El Padrino", "Titanic", "Matrix", "Inception", "Interstellar", "Joker", "Gladiador", "Pulp Fiction",
-    "Fight Club", "Breaking Bad", "Dark", "Stranger Things", "La Casa de Papel", "Game of Thrones",
-    "Harry Potter", "El Señor de los Anillos", "Star Wars", "Black Mirror", "The Office", "Peaky Blinders",
-    "Parásitos", "Whiplash", "La La Land", "Se7en", "El Silencio de los Inocentes", "Shrek", "Toy Story",
-    "El Rey León", "The Boys", "Better Call Saul", "Narcos", "El Marginal", "Los Simuladores",
-    "Casados con Hijos", "Chernobyl", "Oppenheimer", "Barbie", "Django", "Bastardos sin gloria",
-    "Volver al Futuro", "Jurassic Park", "Terminator", "Alien", "Mad Max", "Blade Runner", "Memento",
-    "El Resplandor", "Psicosis", "El Sexto Sentido"
+    "El Padrino","Titanic","Matrix","Inception","Interstellar","Joker","Gladiador","Pulp Fiction",
+    "Fight Club","Breaking Bad","Dark","Stranger Things","La Casa de Papel","Game of Thrones",
+    "Harry Potter","El Señor de los Anillos","Star Wars","Black Mirror","The Office","Peaky Blinders",
+    "Parásitos","Whiplash","La La Land","Se7en","El Silencio de los Inocentes","Shrek","Toy Story",
+    "El Rey León","The Boys","Better Call Saul","Narcos","El Marginal","Los Simuladores",
+    "Casados con Hijos","Chernobyl","Oppenheimer","Barbie","Django","Bastardos sin gloria",
+    "Volver al Futuro","Jurassic Park","Terminator","Alien","Mad Max","Blade Runner","Memento",
+    "El Resplandor","Psicosis","El Sexto Sentido"
   ],
   "Deportes/Deportistas": [
-    "Lionel Messi", "Diego Maradona", "Cristiano Ronaldo", "Neymar", "Mbappé", "Pelé", "Ronaldinho",
-    "Stephen Curry", "Michael Jordan", "Kobe Bryant", "LeBron James", "Manu Ginóbili", "Juan Martín del Potro",
-    "Novak Djokovic", "Rafael Nadal", "Roger Federer", "Serena Williams", "Usain Bolt", "Michael Phelps",
-    "Max Verstappen", "Lewis Hamilton", "Franco Colapinto", "Diego Simeone", "Pep Guardiola",
-    "Carlos Tévez", "Ángel Di María", "Dibu Martínez", "Sergio Agüero",
-    "Fútbol", "Básquet", "Tenis", "Rugby", "Fórmula 1", "Mundial", "Copa Libertadores",
-    "Champions League", "Superclásico", "Boca Juniors", "River Plate", "Ajedrez", "Garry Kasparov",
-    "UFC", "Conor McGregor", "Mike Tyson", "Muhammad Ali"
+    "Lionel Messi","Diego Maradona","Cristiano Ronaldo","Neymar","Mbappé","Pelé","Ronaldinho",
+    "Stephen Curry","Michael Jordan","Kobe Bryant","LeBron James","Manu Ginóbili","Juan Martín del Potro",
+    "Novak Djokovic","Rafael Nadal","Roger Federer","Serena Williams","Usain Bolt","Michael Phelps",
+    "Max Verstappen","Lewis Hamilton","Franco Colapinto","Diego Simeone","Pep Guardiola",
+    "Carlos Tévez","Ángel Di María","Dibu Martínez","Sergio Agüero",
+    "Fútbol","Básquet","Tenis","Rugby","Fórmula 1","Mundial","Copa Libertadores",
+    "Champions League","Superclásico","Boca Juniors","River Plate","Ajedrez","Garry Kasparov",
+    "UFC","Conor McGregor","Mike Tyson","Muhammad Ali"
   ],
   "Música/Cantantes": [
-    "Michael Jackson", "Madonna", "Freddie Mercury", "Queen", "The Beatles", "John Lennon", "Paul McCartney",
-    "David Bowie", "Eminem", "Drake", "Taylor Swift", "Adele", "Rihanna", "Beyoncé",
-    "The Weeknd", "Bruno Mars", "Ed Sheeran", "Shakira", "Bad Bunny", "Daddy Yankee", "Karol G",
-    "Rosalía", "Luis Miguel", "Soda Stereo", "Gustavo Cerati", "Charly García", "Spinetta", "Fito Páez",
-    "Andrés Calamaro", "Los Redondos", "La Renga", "Duki", "Bizarrap", "Tini", "Nicki Nicole", "Wos",
-    "Metallica", "AC/DC", "Coldplay", "U2", "Pink Floyd", "Guns N' Roses", "Axl Rose",
-    "Nirvana", "Kurt Cobain", "Lady Gaga", "Billie Eilish"
+    "Michael Jackson","Madonna","Freddie Mercury","Queen","The Beatles","John Lennon","Paul McCartney",
+    "David Bowie","Eminem","Drake","Taylor Swift","Adele","Rihanna","Beyoncé",
+    "The Weeknd","Bruno Mars","Ed Sheeran","Shakira","Bad Bunny","Daddy Yankee","Karol G",
+    "Rosalía","Luis Miguel","Soda Stereo","Gustavo Cerati","Charly García","Spinetta","Fito Páez",
+    "Andrés Calamaro","Los Redondos","La Renga","Duki","Bizarrap","Tini","Nicki Nicole","Wos",
+    "Metallica","AC/DC","Coldplay","U2","Pink Floyd","Guns N' Roses","Axl Rose",
+    "Nirvana","Kurt Cobain","Lady Gaga","Billie Eilish"
   ],
   "Argentina": [
-    "Buenos Aires", "Mendoza", "Córdoba", "Rosario", "Bariloche", "Mar del Plata", "Ushuaia", "El Calafate",
-    "Cataratas del Iguazú", "Aconcagua", "Obelisco", "Casa Rosada", "Plaza de Mayo",
-    "La Bombonera", "El Monumental", "Ruta 40", "Patagonia", "Mate", "Asado", "Fernet", "Dulce de leche",
-    "Alfajor", "Empanadas", "Choripán", "Parrilla", "Vino mendocino", "Tango", "Gardel", "Mercedes Sosa",
-    "Soda Stereo", "Malvinas", "Perito Moreno", "San Martín de los Andes",
-    "Selección Argentina", "Messi", "Maradona"
+    "Buenos Aires","Mendoza","Córdoba","Rosario","Bariloche","Mar del Plata","Ushuaia","El Calafate",
+    "Cataratas del Iguazú","Aconcagua","Obelisco","Casa Rosada","Plaza de Mayo",
+    "La Bombonera","El Monumental","Ruta 40","Patagonia","Mate","Asado","Fernet","Dulce de leche",
+    "Alfajor","Empanadas","Choripán","Parrilla","Vino mendocino","Tango","Gardel","Mercedes Sosa",
+    "Soda Stereo","Malvinas","Perito Moreno","San Martín de los Andes",
+    "Selección Argentina","Messi","Maradona"
   ],
   "Vale Todo": [
-    "Tinder", "Netflix", "Uber", "WhatsApp", "Instagram", "TikTok", "Bitcoin", "ChatGPT", "Wi-Fi", "VPN", "Nmap",
-    "Vino", "Cerveza", "Resaca", "Karaoke", "After", "Asado con amigos", "Cumpleaños",
-    "Boda", "Divorcio", "Jefe tóxico", "Reunión", "Presentación", "Final de la facu", "Trámite",
-    "DNI", "Pasaporte", "Aduana", "Aeropuerto", "Hotel", "Playa", "Boliche", "Mate amargo",
-    "Fútbol 5", "Control remoto", "Aire acondicionado", "Microondas", "Heladera", "Corte de luz",
-    "Banco", "Tarjeta de crédito", "Cuotas", "Inflación", "Dólar", "Propina", "Delivery"
+    "Tinder","Netflix","Uber","WhatsApp","Instagram","TikTok","Bitcoin","ChatGPT","Wi-Fi","VPN",
+    "Vino","Cerveza","Resaca","Karaoke","After","Asado","Cumpleaños",
+    "Boda","Divorcio","Jefe tóxico","Reunión","Presentación","Final de la facu","Trámite",
+    "DNI","Pasaporte","Aduana","Aeropuerto","Hotel","Playa","Boliche","Mate amargo",
+    "Fútbol 5","Control remoto","Aire acondicionado","Microondas","Heladera","Corte de luz",
+    "Banco","Tarjeta de crédito","Cuotas","Inflación","Dólar","Propina","Delivery"
   ],
 };
 
@@ -85,50 +85,10 @@ const ROUNDS = [
 
 // Theme completo por equipo
 const TEAM_THEME = [
-  {
-    name: "Azul",
-    pageBg: "bg-gradient-to-br from-sky-950/35 via-slate-950/30 to-black/40",
-    border: "border-sky-400/25",
-    ring: "ring-sky-400/25",
-    softBg: "bg-sky-500/5",
-    dot: "text-sky-300",
-    badgeBg: "bg-sky-500/15",
-    badgeText: "text-sky-200",
-    word: "text-sky-200",
-  },
-  {
-    name: "Rojo",
-    pageBg: "bg-gradient-to-br from-rose-950/30 via-slate-950/30 to-black/40",
-    border: "border-rose-400/25",
-    ring: "ring-rose-400/25",
-    softBg: "bg-rose-500/5",
-    dot: "text-rose-300",
-    badgeBg: "bg-rose-500/15",
-    badgeText: "text-rose-200",
-    word: "text-rose-200",
-  },
-  {
-    name: "Verde",
-    pageBg: "bg-gradient-to-br from-emerald-950/28 via-slate-950/30 to-black/40",
-    border: "border-emerald-400/25",
-    ring: "ring-emerald-400/25",
-    softBg: "bg-emerald-500/5",
-    dot: "text-emerald-300",
-    badgeBg: "bg-emerald-500/15",
-    badgeText: "text-emerald-200",
-    word: "text-emerald-200",
-  },
-  {
-    name: "Violeta",
-    pageBg: "bg-gradient-to-br from-violet-950/28 via-slate-950/30 to-black/40",
-    border: "border-violet-400/25",
-    ring: "ring-violet-400/25",
-    softBg: "bg-violet-500/5",
-    dot: "text-violet-300",
-    badgeBg: "bg-violet-500/15",
-    badgeText: "text-violet-200",
-    word: "text-violet-200",
-  },
+  { name: "Azul", pageBg: "bg-gradient-to-br from-sky-950/35 via-slate-950/30 to-black/40", border: "border-sky-400/25", ring: "ring-sky-400/25", softBg: "bg-sky-500/5", dot: "text-sky-300", badgeBg: "bg-sky-500/15", badgeText: "text-sky-200", word: "text-sky-200" },
+  { name: "Rojo", pageBg: "bg-gradient-to-br from-rose-950/30 via-slate-950/30 to-black/40", border: "border-rose-400/25", ring: "ring-rose-400/25", softBg: "bg-rose-500/5", dot: "text-rose-300", badgeBg: "bg-rose-500/15", badgeText: "text-rose-200", word: "text-rose-200" },
+  { name: "Verde", pageBg: "bg-gradient-to-br from-emerald-950/28 via-slate-950/30 to-black/40", border: "border-emerald-400/25", ring: "ring-emerald-400/25", softBg: "bg-emerald-500/5", dot: "text-emerald-300", badgeBg: "bg-emerald-500/15", badgeText: "text-emerald-200", word: "text-emerald-200" },
+  { name: "Violeta", pageBg: "bg-gradient-to-br from-violet-950/28 via-slate-950/30 to-black/40", border: "border-violet-400/25", ring: "ring-violet-400/25", softBg: "bg-violet-500/5", dot: "text-violet-300", badgeBg: "bg-violet-500/15", badgeText: "text-violet-200", word: "text-violet-200" },
 ];
 
 function safeUUID() {
@@ -136,7 +96,7 @@ function safeUUID() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-// ✅ helpers para inputs numéricos controlados (string while typing)
+// inputs numéricos controlados
 function toNumberOrNaN(v) {
   const n = Number.parseInt(String(v), 10);
   return Number.isNaN(n) ? NaN : n;
@@ -155,34 +115,40 @@ export default function SayMyNameGame({ onPlayingChange }) {
   // phase: setup -> draft -> play -> results
   const [phase, setPhase] = useState(() => saved?.phase ?? "setup");
 
-  // ✅ teamsCount lo dejamos numérico (no suele necesitar borrado completo)
-  const [teamsCount, setTeamsCount] = useState(() => saved?.teamsCount ?? 2);
-
-  // ✅ deckTotal como STRING para no trabar el input (desktop/mobile)
-  const [deckTotal, setDeckTotal] = useState(() => {
-    const initial = saved?.deckTotal ?? 30;
-    return String(initial);
-  });
+  // móvil-friendly
+  const [teamsCount, setTeamsCount] = useState(() => String(saved?.teamsCount ?? 2));
+  const [deckTotal, setDeckTotal] = useState(() => String(saved?.deckTotal ?? 30));
 
   const [selectedCategories, setSelectedCategories] = useState(
     () => saved?.selectedCategories ?? [categories[0]].filter(Boolean)
   );
 
-  const [membersPerTeam, setMembersPerTeam] = useState(
-    () => saved?.membersPerTeam ?? Array.from({ length: saved?.teamsCount ?? 2 }, () => 2)
-  );
+  const [membersPerTeam, setMembersPerTeam] = useState(() => {
+    const baseTeams = saved?.teamsCount ?? 2;
+    const arr = saved?.membersPerTeam ?? Array.from({ length: baseTeams }, () => 2);
+    return Array.from({ length: baseTeams }, (_, i) => String(arr[i] ?? 2));
+  });
 
   const [roundIndex, setRoundIndex] = useState(() => saved?.roundIndex ?? 0);
   const [currentTeam, setCurrentTeam] = useState(() => saved?.currentTeam ?? 0);
   const [currentSlot, setCurrentSlot] = useState(() => saved?.currentSlot ?? 0);
   const [turnsDone, setTurnsDone] = useState(() => saved?.turnsDone ?? 0);
 
-  const [scores, setScores] = useState(
-    () => saved?.scores ?? Array.from({ length: 2 }, () => 0)
+  // ✅ aciertos (totales de la partida)
+  const [roundScores, setRoundScores] = useState(
+    () => saved?.roundScores ?? Array.from({ length: saved?.teamsCount ?? 2 }, () => 0)
   );
 
-  // mazo final del juego (sale del draft)
+  // ✅ marcador global
+  const [globalWins, setGlobalWins] = useState(
+    () => saved?.globalWins ?? Array.from({ length: saved?.teamsCount ?? 2 }, () => 0)
+  );
+
+  // ✅ deck de la ronda (se consume)
   const [deck, setDeck] = useState(() => saved?.deck ?? []);
+
+  // ✅ baseDeck: cartas “originales” para recargar cada ronda
+  const [baseDeck, setBaseDeck] = useState(() => saved?.baseDeck ?? []);
 
   // timer
   const [secondsLeft, setSecondsLeft] = useState(() => saved?.secondsLeft ?? 0);
@@ -191,55 +157,86 @@ export default function SayMyNameGame({ onPlayingChange }) {
   // reset confirm
   const [confirmReset, setConfirmReset] = useState(() => saved?.confirmReset ?? false);
 
-  // draft states
+  // draft
   const [draftParticipants, setDraftParticipants] = useState(() => saved?.draftParticipants ?? []);
   const [draftIndex, setDraftIndex] = useState(() => saved?.draftIndex ?? 0);
 
   const round = ROUNDS[roundIndex];
   const topCard = deck?.[0] ?? null;
 
-  const theme = TEAM_THEME[currentTeam] ?? TEAM_THEME[0];
+  // números
+  const teamsCountNum = useMemo(() => {
+    const n = toNumberOrNaN(teamsCount);
+    return Number.isNaN(n) ? 0 : n;
+  }, [teamsCount]);
 
-  // ✅ número real de deckTotal (cuando hace falta)
   const deckTotalNum = useMemo(() => {
     const n = toNumberOrNaN(deckTotal);
     return Number.isNaN(n) ? 0 : n;
   }, [deckTotal]);
 
-  // Avisar al App: “estoy jugando” para ocultar volver al menú
+  const membersPerTeamNum = useMemo(() => {
+    return membersPerTeam.map((v) => {
+      const n = toNumberOrNaN(v);
+      return Number.isNaN(n) ? 0 : n;
+    });
+  }, [membersPerTeam]);
+
+  const safeTeamsForUI = teamsCountNum || 2;
+  const theme = TEAM_THEME[currentTeam] ?? TEAM_THEME[0];
+
   useEffect(() => {
     onPlayingChange?.(phase === "play");
   }, [phase, onPlayingChange]);
 
-  // Ajustar arrays si cambia teamsCount
   useEffect(() => {
-    setScores((prev) => Array.from({ length: teamsCount }, (_, i) => prev?.[i] ?? 0));
-    setMembersPerTeam((prev) => Array.from({ length: teamsCount }, (_, i) => prev?.[i] ?? 2));
+    if (!teamsCountNum) return;
+    const t = clampNumber(teamsCountNum, 2, 4);
 
-    setCurrentTeam((t) => Math.min(t, teamsCount - 1));
+    setRoundScores((prev) => Array.from({ length: t }, (_, i) => prev?.[i] ?? 0));
+    setGlobalWins((prev) => Array.from({ length: t }, (_, i) => prev?.[i] ?? 0));
+    setMembersPerTeam((prev) => Array.from({ length: t }, (_, i) => prev?.[i] ?? "2"));
+
+    setCurrentTeam((x) => Math.min(x, t - 1));
     setCurrentSlot((s) => Math.max(0, s));
-  }, [teamsCount]);
+  }, [teamsCountNum]);
 
-  // Persistencia (guardamos deckTotal como número si es válido, sino guardamos el último válido o 30)
+  // Persistencia
   useEffect(() => {
-    const n = toNumberOrNaN(deckTotal);
-    const safeDeckTotal = Number.isNaN(n) ? (saved?.deckTotal ?? 30) : n;
+    const tc = toNumberOrNaN(teamsCount);
+    const safeTeams = Number.isNaN(tc) ? (saved?.teamsCount ?? 2) : clampNumber(tc, 2, 4);
+
+    const dt = toNumberOrNaN(deckTotal);
+    const safeDeckTotal = Number.isNaN(dt) ? (saved?.deckTotal ?? 30) : clampNumber(dt, 10, 200);
+
+    const safeMembers = Array.from({ length: safeTeams }, (_, i) => {
+      const n = toNumberOrNaN(membersPerTeam[i] ?? "2");
+      if (Number.isNaN(n)) return 2;
+      return clampNumber(n, 1, 12);
+    });
 
     const stateToSave = {
       phase,
-      teamsCount,
+      teamsCount: safeTeams,
       deckTotal: safeDeckTotal,
       selectedCategories,
-      membersPerTeam,
+      membersPerTeam: safeMembers,
+
       roundIndex,
       currentTeam,
       currentSlot,
       turnsDone,
-      scores,
+
+      roundScores,
+      globalWins,
+
       deck,
+      baseDeck,
+
       secondsLeft,
       running,
       confirmReset,
+
       draftParticipants,
       draftIndex,
     };
@@ -254,63 +251,57 @@ export default function SayMyNameGame({ onPlayingChange }) {
     currentTeam,
     currentSlot,
     turnsDone,
-    scores,
+    roundScores,
+    globalWins,
     deck,
+    baseDeck,
     secondsLeft,
     running,
     confirmReset,
     draftParticipants,
     draftIndex,
+    saved?.teamsCount,
     saved?.deckTotal,
+    saved?.membersPerTeam,
   ]);
 
-  // Si cambia de fase, cerramos confirmación
   useEffect(() => {
     setConfirmReset(false);
   }, [phase]);
 
   const totalParticipants = useMemo(() => {
-    const sum = membersPerTeam.reduce((acc, n) => acc + (n ?? 0), 0);
+    const sum = membersPerTeamNum.slice(0, safeTeamsForUI).reduce((acc, n) => acc + (n || 0), 0);
     return Math.max(1, sum);
-  }, [membersPerTeam]);
+  }, [membersPerTeamNum, safeTeamsForUI]);
 
   const totalTurnsThisRound = totalParticipants;
-
-  const quotaPerParticipant = useMemo(() => {
-    if (deckTotalNum <= 0) return 0;
-    return Math.floor(deckTotalNum / totalParticipants);
-  }, [deckTotalNum, totalParticipants]);
-
-  const samplePerParticipant = useMemo(() => quotaPerParticipant * 2, [quotaPerParticipant]);
 
   const poolCount = selectedCategories.reduce((acc, c) => acc + (CARD_BANK[c]?.length ?? 0), 0);
   const canStartDraft = selectedCategories.length > 0;
 
+  const draftValidMultiple = deckTotalNum > 0 && deckTotalNum % totalParticipants === 0;
+  const quota = draftValidMultiple ? deckTotalNum / totalParticipants : 0;
+  const sampleCount = quota * 2;
+
   function toggleCategory(cat) {
-    setSelectedCategories((prev) =>
-      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
-    );
+    setSelectedCategories((prev) => (prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]));
   }
 
   function buildCardsPool() {
     const pool = selectedCategories.flatMap((c) =>
-      (CARD_BANK[c] ?? []).map((answer) => ({
-        id: safeUUID(),
-        answer,
-        category: c,
-      }))
+      (CARD_BANK[c] ?? []).map((answer) => ({ id: safeUUID(), answer, category: c }))
     );
     return shuffle(pool);
   }
 
-  // orden de participantes: slot 0 team 0..N, slot 1 team 0..N ...
   function buildParticipantsList() {
     const participants = [];
-    const maxSlots = Math.max(1, ...membersPerTeam.map((n) => n || 1));
+    const t = safeTeamsForUI;
+    const maxSlots = Math.max(1, ...membersPerTeamNum.slice(0, t).map((n) => n || 1));
 
     for (let slot = 0; slot < maxSlots; slot++) {
-      for (let team = 0; team < teamsCount; team++) {
-        const members = membersPerTeam[team] ?? 1;
+      for (let team = 0; team < t; team++) {
+        const members = membersPerTeamNum[team] || 1;
         if (members > slot) {
           participants.push({
             id: `${team}-${slot}`,
@@ -336,18 +327,15 @@ export default function SayMyNameGame({ onPlayingChange }) {
       alert("Ingresá un tamaño de mazo válido.");
       return;
     }
-
     if (total % totalParticipants !== 0) {
-      alert(
-        `El tamaño del mazo (${total}) debe ser múltiplo del total de participantes (${totalParticipants}).`
-      );
+      alert(`El tamaño del mazo (${total}) debe ser múltiplo del total de participantes (${totalParticipants}).`);
       return;
     }
 
-    const quota = total / totalParticipants; // ej 5
-    const sampleCount = quota * 2; // ej 10
+    const q = total / totalParticipants;
+    const sc = q * 2;
 
-    if (sampleCount <= 0) {
+    if (sc <= 0) {
       alert("El tamaño del mazo es muy chico para armar selección.");
       return;
     }
@@ -355,34 +343,31 @@ export default function SayMyNameGame({ onPlayingChange }) {
     let bag = [...pool];
 
     const participants = buildParticipantsList().map((p) => {
-      if (bag.length < sampleCount) {
-        bag = shuffle(pool);
-      }
+      if (bag.length < sc) bag = shuffle(pool);
 
-      const options = bag.slice(0, sampleCount);
-      bag = bag.slice(sampleCount);
+      const options = bag.slice(0, sc);
+      bag = bag.slice(sc);
 
-      return {
-        ...p,
-        options,
-        picks: [],
-        quota,
-        sampleCount,
-      };
+      return { ...p, options, picks: [], quota: q, sampleCount: sc };
     });
 
     setDraftParticipants(participants);
     setDraftIndex(0);
 
     // limpiar juego previo
-    setDeck([]);
-    setScores(Array.from({ length: teamsCount }, () => 0));
+    setRoundScores(Array.from({ length: safeTeamsForUI }, () => 0));
+    setGlobalWins((prev) => Array.from({ length: safeTeamsForUI }, (_, i) => prev?.[i] ?? 0));
+
     setRoundIndex(0);
     setCurrentTeam(0);
     setCurrentSlot(0);
     setTurnsDone(0);
+
     setSecondsLeft(ROUNDS[0].baseSeconds);
     setRunning(false);
+
+    setDeck([]);
+    setBaseDeck([]);
 
     setPhase("draft");
   }
@@ -405,22 +390,25 @@ export default function SayMyNameGame({ onPlayingChange }) {
   }
 
   function finalizeDraftToDeck() {
-    const chosen = draftParticipants.flatMap((pp) =>
-      pp.options.filter((c) => pp.picks.includes(c.id))
-    );
+    const chosen = draftParticipants.flatMap((pp) => pp.options.filter((c) => pp.picks.includes(c.id)));
 
     if (chosen.length !== deckTotalNum) {
       alert(`Error: mazo final tiene ${chosen.length} cartas y debería tener ${deckTotalNum}.`);
       return;
     }
 
-    setDeck(shuffle(chosen));
+    // ✅ baseDeck se usa para recargar cada ronda
+    const base = shuffle(chosen);
+    setBaseDeck(base);
+    setDeck(shuffle(base)); // ronda 1
 
-    setScores(Array.from({ length: teamsCount }, () => 0));
+    setRoundScores(Array.from({ length: safeTeamsForUI }, () => 0));
+
     setRoundIndex(0);
     setCurrentTeam(0);
     setCurrentSlot(0);
     setTurnsDone(0);
+
     setSecondsLeft(ROUNDS[0].baseSeconds);
     setRunning(false);
 
@@ -444,19 +432,20 @@ export default function SayMyNameGame({ onPlayingChange }) {
     finalizeDraftToDeck();
   }
 
-  // --- TURNO SALTEADO (play) ---
+  // --- turnos ---
   function getNextTurn(team, slot) {
-    const maxSlots = Math.max(1, ...membersPerTeam.map((n) => n || 1));
+    const t = safeTeamsForUI;
+    const maxSlots = Math.max(1, ...membersPerTeamNum.slice(0, t).map((n) => n || 1));
 
     let nextTeam = team;
-    for (let tries = 0; tries < teamsCount; tries++) {
-      nextTeam = (nextTeam + 1) % teamsCount;
-      if ((membersPerTeam[nextTeam] ?? 1) > slot) return { team: nextTeam, slot };
+    for (let tries = 0; tries < t; tries++) {
+      nextTeam = (nextTeam + 1) % t;
+      if ((membersPerTeamNum[nextTeam] || 1) > slot) return { team: nextTeam, slot };
     }
 
     for (let s = slot + 1; s < maxSlots; s++) {
-      for (let t = 0; t < teamsCount; t++) {
-        if ((membersPerTeam[t] ?? 1) > s) return { team: t, slot: s };
+      for (let tt = 0; tt < t; tt++) {
+        if ((membersPerTeamNum[tt] || 1) > s) return { team: tt, slot: s };
       }
     }
 
@@ -467,28 +456,51 @@ export default function SayMyNameGame({ onPlayingChange }) {
     return ROUNDS[roundIndex]?.baseSeconds ?? 30;
   }
 
-  function autoAdvanceRoundIfNeeded(nextTurnsDone) {
-    if (nextTurnsDone < totalTurnsThisRound) return false;
+  function advanceToNextRoundOrFinish() {
+    const nextRound = roundIndex + 1;
 
-    const nextRoundIndex = roundIndex + 1;
-    if (nextRoundIndex >= ROUNDS.length) {
-      setPhase("results");
+    // ✅ si ya fue la última ronda => finalizar juego
+    if (nextRound >= ROUNDS.length) {
+      // ganador por aciertos totales
+      const max = Math.max(...roundScores);
+      const winners = roundScores
+        .map((v, i) => ({ v, i }))
+        .filter((x) => x.v === max)
+        .map((x) => x.i);
+
+      // si hay empate, no suma nadie
+      if (winners.length === 1) {
+        const winner = winners[0];
+        setGlobalWins((prev) => prev.map((x, i) => (i === winner ? x + 1 : x)));
+      }
+
       setRunning(false);
-      return true;
+      setPhase("results");
+      return;
     }
 
-    setRoundIndex(nextRoundIndex);
+    // ✅ avanzar ronda: recargar deck con baseDeck
+    setRoundIndex(nextRound);
     setTurnsDone(0);
     setCurrentTeam(0);
     setCurrentSlot(0);
-    setSecondsLeft(ROUNDS[nextRoundIndex].baseSeconds);
+    setSecondsLeft(ROUNDS[nextRound].baseSeconds);
     setRunning(false);
-    return true;
+
+    setDeck(shuffle(baseDeck));
   }
 
   // Timer
   useEffect(() => {
     if (phase !== "play") return;
+
+    // ✅ si se acabaron las cartas => termina la ronda y avanza
+    if (deck.length === 0 && baseDeck.length > 0) {
+      setRunning(false);
+      advanceToNextRoundOrFinish();
+      return;
+    }
+
     if (!running) return;
 
     if (secondsLeft <= 0) {
@@ -496,16 +508,19 @@ export default function SayMyNameGame({ onPlayingChange }) {
 
       const nextTurnsDone = turnsDone + 1;
 
-      const advancedRound = autoAdvanceRoundIfNeeded(nextTurnsDone);
-      if (advancedRound) return;
+      // si terminaron los turnos pero todavía quedan cartas, pasamos al siguiente jugador
+      if (nextTurnsDone < totalTurnsThisRound) {
+        setTurnsDone(nextTurnsDone);
+        const next = getNextTurn(currentTeam, currentSlot);
+        setCurrentTeam(next.team);
+        setCurrentSlot(next.slot);
+        setSecondsLeft(getTurnSeconds());
+        return;
+      }
 
+      // ✅ terminaron los turnos de la ronda => avanza de ronda
       setTurnsDone(nextTurnsDone);
-
-      const next = getNextTurn(currentTeam, currentSlot);
-      setCurrentTeam(next.team);
-      setCurrentSlot(next.slot);
-
-      setSecondsLeft(getTurnSeconds());
+      advanceToNextRoundOrFinish();
       return;
     }
 
@@ -519,12 +534,14 @@ export default function SayMyNameGame({ onPlayingChange }) {
     roundIndex,
     currentTeam,
     currentSlot,
-    teamsCount,
-    membersPerTeam,
     totalTurnsThisRound,
+    deck.length,
+    baseDeck.length,
+    roundScores,
   ]);
 
   function startTurn() {
+    if (deck.length === 0) return;
     setSecondsLeft(getTurnSeconds());
     setRunning(true);
   }
@@ -535,8 +552,14 @@ export default function SayMyNameGame({ onPlayingChange }) {
 
   function markGuessed() {
     if (!topCard || !running) return;
-    setScores((prev) => prev.map((s, i) => (i === currentTeam ? s + 1 : s)));
-    setDeck((prev) => prev.slice(1));
+
+    setRoundScores((prev) => prev.map((s, i) => (i === currentTeam ? s + 1 : s)));
+
+    setDeck((prev) => {
+      const nextDeck = prev.slice(1);
+      // ✅ si con esto se acabó, la lógica del useEffect avanza de ronda
+      return nextDeck;
+    });
   }
 
   function passCard() {
@@ -549,19 +572,22 @@ export default function SayMyNameGame({ onPlayingChange }) {
 
     setPhase("setup");
 
-    setTeamsCount(2);
-    setDeckTotal("30"); // ✅ string
+    setTeamsCount("2");
+    setDeckTotal("30");
 
     setSelectedCategories([categories[0]].filter(Boolean));
-    setMembersPerTeam([2, 2]);
+    setMembersPerTeam(["2", "2"]);
 
     setRoundIndex(0);
     setCurrentTeam(0);
     setCurrentSlot(0);
     setTurnsDone(0);
 
-    setScores([0, 0]);
+    setRoundScores([0, 0]);
+    setGlobalWins([0, 0]);
+
     setDeck([]);
+    setBaseDeck([]);
 
     setSecondsLeft(0);
     setRunning(false);
@@ -572,13 +598,16 @@ export default function SayMyNameGame({ onPlayingChange }) {
     setConfirmReset(false);
   }
 
-  const memberNumberHuman = currentSlot + 1;
-  const membersThisTeam = membersPerTeam[currentTeam] ?? 1;
+  const membersThisTeam = membersPerTeamNum[currentTeam] || 1;
 
-  // Validación del draft
-  const draftValidMultiple = deckTotalNum > 0 && deckTotalNum % totalParticipants === 0;
-  const quota = draftValidMultiple ? deckTotalNum / totalParticipants : 0;
-  const sampleCount = quota * 2;
+  // Ganador final (results)
+  const maxRound = roundScores.length ? Math.max(...roundScores) : 0;
+  const roundWinners = roundScores
+    .map((v, i) => ({ v, i }))
+    .filter((x) => x.v === maxRound)
+    .map((x) => x.i);
+
+  const winnerLabel = roundWinners.length === 1 ? `Ganó el Equipo ${roundWinners[0] + 1}` : "Empate";
 
   return (
     <div className="space-y-4">
@@ -588,7 +617,7 @@ export default function SayMyNameGame({ onPlayingChange }) {
           <div>
             <h2 className="text-2xl font-bold">🎤 Say My Name</h2>
             <p className="text-slate-300">
-              Selección por participantes (draft) + turnos automáticos + mazo compartido.
+              Draft por participantes + turnos automáticos + mazo por ronda (se recarga).
             </p>
           </div>
 
@@ -632,40 +661,40 @@ export default function SayMyNameGame({ onPlayingChange }) {
             <div className="space-y-2">
               <label className="text-sm text-slate-300">Equipos (2 a 4)</label>
               <input
-                type="number"
+                type="text"
                 value={teamsCount}
-                min={2}
-                max={4}
+                inputMode="numeric"
+                pattern="\d*"
                 onChange={(e) => {
-                  const v = toNumberOrNaN(e.target.value);
-                  if (Number.isNaN(v)) return;
-                  setTeamsCount(clampNumber(v, 2, 4));
+                  const v = e.target.value;
+                  if (!onlyDigitsOrEmpty(v)) return;
+                  setTeamsCount(v);
+                }}
+                onBlur={() => {
+                  const n = toNumberOrNaN(teamsCount);
+                  if (Number.isNaN(n)) setTeamsCount("2");
+                  else setTeamsCount(String(clampNumber(n, 2, 4)));
                 }}
                 className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
               />
             </div>
 
-            {/* ✅ FIX: deckTotal input no se traba (string while typing) */}
             <div className="space-y-2">
               <label className="text-sm text-slate-300">Tamaño del mazo total (ej: 30)</label>
               <input
-                type="number"
+                type="text"
                 value={deckTotal}
-                min={10}
-                max={200}
                 inputMode="numeric"
+                pattern="\d*"
                 onChange={(e) => {
                   const v = e.target.value;
-                  if (!onlyDigitsOrEmpty(v)) return; // seguridad extra
-                  setDeckTotal(v); // permite "" para borrar
+                  if (!onlyDigitsOrEmpty(v)) return;
+                  setDeckTotal(v);
                 }}
                 onBlur={() => {
                   const n = toNumberOrNaN(deckTotal);
-                  if (Number.isNaN(n)) {
-                    setDeckTotal("10");
-                  } else {
-                    setDeckTotal(String(clampNumber(n, 10, 200)));
-                  }
+                  if (Number.isNaN(n)) setDeckTotal("10");
+                  else setDeckTotal(String(clampNumber(n, 10, 200)));
                 }}
                 className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
               />
@@ -674,37 +703,35 @@ export default function SayMyNameGame({ onPlayingChange }) {
               </div>
             </div>
 
-            {/* Integrantes por equipo */}
             <div className="space-y-2 sm:col-span-2">
               <label className="text-sm text-slate-300">Integrantes por equipo</label>
-
               <div className="grid gap-2 sm:grid-cols-2">
-                {Array.from({ length: teamsCount }, (_, i) => {
+                {Array.from({ length: safeTeamsForUI }, (_, i) => {
                   const t = TEAM_THEME[i] ?? TEAM_THEME[0];
                   return (
                     <div key={i} className="rounded-xl border border-white/10 bg-black/20 p-3">
                       <div className="text-xs text-slate-300 mb-2">
                         Equipo {i + 1}{" "}
-                        <span
-                          className={[
-                            "ml-2 rounded-lg px-2 py-0.5 text-[11px]",
-                            t.badgeBg,
-                            t.badgeText,
-                          ].join(" ")}
-                        >
+                        <span className={["ml-2 rounded-lg px-2 py-0.5 text-[11px]", t.badgeBg, t.badgeText].join(" ")}>
                           {t.name}
                         </span>
                       </div>
+
                       <input
-                        type="number"
-                        min={1}
-                        max={12}
-                        value={membersPerTeam[i] ?? 2}
+                        type="text"
+                        value={membersPerTeam[i] ?? "2"}
+                        inputMode="numeric"
+                        pattern="\d*"
                         onChange={(e) => {
-                          const n = toNumberOrNaN(e.target.value);
-                          if (Number.isNaN(n)) return;
-                          const v = clampNumber(n, 1, 12);
+                          const v = e.target.value;
+                          if (!onlyDigitsOrEmpty(v)) return;
                           setMembersPerTeam((prev) => prev.map((x, idx) => (idx === i ? v : x)));
+                        }}
+                        onBlur={() => {
+                          const raw = membersPerTeam[i] ?? "";
+                          const n = toNumberOrNaN(raw);
+                          const safe = Number.isNaN(n) ? 2 : clampNumber(n, 1, 12);
+                          setMembersPerTeam((prev) => prev.map((x, idx) => (idx === i ? String(safe) : x)));
                         }}
                         className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
                       />
@@ -720,20 +747,19 @@ export default function SayMyNameGame({ onPlayingChange }) {
                 <div className="mt-1 text-slate-300">
                   {draftValidMultiple ? (
                     <>
-                      Cada participante verá <b>{sampleCount}</b> cartas y elegirá{" "}
-                      <b>{quota}</b>. (Mazo final: {deckTotalNum})
+                      Cada participante verá <b>{sampleCount}</b> cartas y elegirá <b>{quota}</b>. (Mazo final:{" "}
+                      {deckTotalNum})
                     </>
                   ) : (
                     <>
-                      ⚠️ El mazo ({deckTotalNum || "—"}) <b>no</b> es múltiplo de {totalParticipants}.
-                      Ajustalo para poder iniciar.
+                      ⚠️ El mazo ({deckTotalNum || "—"}) <b>no</b> es múltiplo de {totalParticipants}. Ajustalo para
+                      poder iniciar.
                     </>
                   )}
                 </div>
               </div>
             </div>
 
-            {/* Categorías */}
             <div className="space-y-2 sm:col-span-2">
               <label className="text-sm text-slate-300">Categorías (podés elegir varias)</label>
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -749,12 +775,7 @@ export default function SayMyNameGame({ onPlayingChange }) {
                           : "border-white/10 bg-black/30 text-slate-300 hover:bg-black/20",
                       ].join(" ")}
                     >
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => toggleCategory(cat)}
-                        className="accent-emerald-500"
-                      />
+                      <input type="checkbox" checked={checked} onChange={() => toggleCategory(cat)} className="accent-emerald-500" />
                       {cat}
                     </label>
                   );
@@ -808,6 +829,7 @@ export default function SayMyNameGame({ onPlayingChange }) {
                       setDraftParticipants([]);
                       setDraftIndex(0);
                       setDeck([]);
+                      setBaseDeck([]);
                       setRunning(false);
                       setSecondsLeft(0);
                     }
@@ -821,9 +843,7 @@ export default function SayMyNameGame({ onPlayingChange }) {
                   onClick={nextParticipantDraft}
                   className={[
                     "rounded-xl px-4 py-2 text-sm font-semibold text-black transition",
-                    pickedCount === mustPick
-                      ? "bg-emerald-500 hover:bg-emerald-400 cursor-pointer"
-                      : "bg-emerald-500/40 cursor-not-allowed",
+                    pickedCount === mustPick ? "bg-emerald-500 hover:bg-emerald-400 cursor-pointer" : "bg-emerald-500/40 cursor-not-allowed",
                   ].join(" ")}
                   disabled={pickedCount !== mustPick}
                 >
@@ -850,9 +870,7 @@ export default function SayMyNameGame({ onPlayingChange }) {
                     onClick={() => togglePick(c.id)}
                     className={[
                       "text-left rounded-2xl border p-4 transition",
-                      checked
-                        ? [t.border, t.softBg, "ring-2", t.ring].join(" ")
-                        : "border-white/10 bg-black/20 hover:bg-black/30",
+                      checked ? [t.border, t.softBg, "ring-2", t.ring].join(" ") : "border-white/10 bg-black/20 hover:bg-black/30",
                     ].join(" ")}
                   >
                     <div className="text-xs text-slate-400">{c.category}</div>
@@ -887,14 +905,14 @@ export default function SayMyNameGame({ onPlayingChange }) {
                 </span>
 
                 <span className="text-slate-400 font-normal">
-                  Integrante {memberNumberHuman}/{membersThisTeam}
+                  Integrante {currentSlot + 1}/{membersThisTeam}
                 </span>
 
-                <span className="text-slate-500 font-normal">• mazo compartido</span>
+                <span className="text-slate-500 font-normal">• mazo por ronda</span>
               </div>
 
               <div className="mt-1 text-xs text-slate-400">
-                Turnos en esta ronda: {turnsDone}/{totalTurnsThisRound} • Cartas restantes: {deck.length}
+                Turnos en esta ronda: {Math.min(turnsDone, totalTurnsThisRound)}/{totalTurnsThisRound} • Cartas restantes: {deck.length}
               </div>
             </div>
 
@@ -921,37 +939,24 @@ export default function SayMyNameGame({ onPlayingChange }) {
             </div>
           </div>
 
-          {/* Scoreboard */}
-          <div className="grid gap-2 sm:grid-cols-4">
-            {scores.map((s, i) => {
-              const t = TEAM_THEME[i] ?? TEAM_THEME[0];
-              const isActive = i === currentTeam;
-              return (
-                <div
-                  key={i}
-                  className={[
-                    "rounded-xl border bg-black/20 px-4 py-3 border-white/10",
-                    isActive ? `ring-2 ${t.ring}` : "",
-                  ].join(" ")}
-                >
-                  <div className="text-xs text-slate-300">
-                    Equipo {i + 1}{" "}
-                    <span className={["ml-2 rounded-lg px-2 py-0.5 text-[11px]", t.badgeBg, t.badgeText].join(" ")}>
-                      {t.name}
-                    </span>
-                  </div>
-                  <div className="text-2xl font-black">{s}</div>
-                </div>
-              );
-            })}
-          </div>
+          {/* ✅ Botón arriba */}
+          <button
+            onClick={markGuessed}
+            disabled={!topCard || !running}
+            className={[
+              "w-full rounded-2xl px-5 py-3 font-semibold transition",
+              !topCard || !running ? "cursor-not-allowed bg-white/5 text-slate-400" : "cursor-pointer bg-emerald-500 text-black hover:bg-emerald-400",
+            ].join(" ")}
+          >
+            ✅ Adivinada (+1)
+          </button>
 
-          {/* Card: solo visible cuando corre el tiempo */}
+          {/* Card */}
           {!running ? (
             <div className={["rounded-2xl border bg-black/20 p-8 text-center", theme.border].join(" ")}>
               <div className="text-sm text-slate-300 mb-2">Turno preparado</div>
               <div className="text-2xl font-black">
-                <span className={theme.badgeText}>Equipo {currentTeam + 1}</span> • Integrante {memberNumberHuman}/{membersThisTeam}
+                <span className={theme.badgeText}>Equipo {currentTeam + 1}</span> • Integrante {currentSlot + 1}/{membersThisTeam}
               </div>
               <div className="mt-2 text-slate-300">
                 Tocá <b>Iniciar turno</b> para mostrar la tarjeta y empezar el tiempo.
@@ -967,35 +972,21 @@ export default function SayMyNameGame({ onPlayingChange }) {
             />
           )}
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            <button
-              onClick={markGuessed}
-              disabled={!topCard || !running}
-              className={[
-                "rounded-2xl px-5 py-3 font-semibold transition",
-                !topCard || !running
-                  ? "cursor-not-allowed bg-white/5 text-slate-400"
-                  : "cursor-pointer bg-emerald-500 text-black hover:bg-emerald-400",
-              ].join(" ")}
-            >
-              ✅ Adivinada (+1)
-            </button>
-
-            <button
-              onClick={passCard}
-              disabled={!topCard || !running}
-              className={[
-                "rounded-2xl border bg-white/5 px-5 py-3 font-semibold transition hover:bg-white/10",
-                theme.border,
-                !topCard || !running ? "cursor-not-allowed opacity-50" : "cursor-pointer",
-              ].join(" ")}
-            >
-              ↩ Pasar
-            </button>
-          </div>
+          {/* ✅ Botón abajo */}
+          <button
+            onClick={passCard}
+            disabled={!topCard || !running}
+            className={[
+              "w-full rounded-2xl border bg-white/5 px-5 py-3 font-semibold transition hover:bg-white/10",
+              theme.border,
+              !topCard || !running ? "cursor-not-allowed opacity-50" : "cursor-pointer",
+            ].join(" ")}
+          >
+            ↩ Pasar
+          </button>
 
           <div className="text-xs text-slate-400">
-            Al terminar el tiempo cambia solo de jugador. Al terminar todos los turnos, avanza de ronda automáticamente.
+            Si se acaban las cartas, <b>termina la ronda</b> y pasa automáticamente a la siguiente (recargando el mazo).
           </div>
         </div>
       )}
@@ -1003,23 +994,19 @@ export default function SayMyNameGame({ onPlayingChange }) {
       {/* RESULTS */}
       {phase === "results" && (
         <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-          <h3 className="text-lg font-semibold">Resultados</h3>
+          <h3 className="text-lg font-semibold">Resultado final</h3>
 
-          <div className="mt-4 grid gap-3 sm:grid-cols-4">
-            {scores.map((s, i) => {
-              const t = TEAM_THEME[i] ?? TEAM_THEME[0];
-              return (
-                <div key={i} className="rounded-xl border border-white/10 bg-black/20 p-4">
-                  <div className="text-xs text-slate-300">
-                    Equipo {i + 1}{" "}
-                    <span className={["ml-2 rounded-lg px-2 py-0.5 text-[11px]", t.badgeBg, t.badgeText].join(" ")}>
-                      {t.name}
-                    </span>
-                  </div>
-                  <div className="text-3xl font-black">{s}</div>
-                </div>
-              );
-            })}
+          <div className="mt-3 rounded-xl border border-white/10 bg-black/20 p-4">
+            <div className="text-lg font-bold">{winnerLabel}</div>
+            <div className="text-sm text-slate-300">
+              Aciertos totales: {roundScores.map((v, i) => `E${i + 1}: ${v}`).join(" • ")}
+            </div>
+            <div className="mt-2 text-sm text-slate-300">
+              Marcador global: {globalWins.map((v, i) => `E${i + 1}: ${v}`).join(" • ")}
+            </div>
+            {roundWinners.length > 1 && (
+              <div className="mt-2 text-xs text-slate-400">Hubo empate: no se sumó +1 global a ningún equipo.</div>
+            )}
           </div>
 
           <button
@@ -1036,13 +1023,7 @@ export default function SayMyNameGame({ onPlayingChange }) {
 
 function AlwaysVisibleCard({ category, value, borderClass, wordClass, tintClass }) {
   return (
-    <div
-      className={[
-        "relative h-40 w-full overflow-hidden rounded-2xl border bg-black/30 p-5",
-        borderClass,
-        tintClass,
-      ].join(" ")}
-    >
+    <div className={["relative h-40 w-full overflow-hidden rounded-2xl border bg-black/30 p-5", borderClass, tintClass].join(" ")}>
       <div className="text-sm text-slate-300">Categoría</div>
       <div className="mt-1 text-xl font-bold">{category}</div>
 
