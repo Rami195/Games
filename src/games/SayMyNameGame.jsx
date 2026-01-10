@@ -77,10 +77,10 @@ const CARD_BANK = {
 
 // ---------- Rondas ----------
 const ROUNDS = [
-  { id: 1, name: "Ronda 1", baseSeconds: 30, can: "Hablar, actuar, hacer sonidos, señalar, cantar, tararear.", cant: "Decir la palabra o una parte clara de la palabra." },
-  { id: 2, name: "Ronda 2", baseSeconds: 30, can: "Decir UNA sola palabra y actuar.", cant: "Decir la palabra, tararear/cantar, hacer sonidos." },
-  { id: 3, name: "Ronda 3", baseSeconds: 30, can: "Solo actuar.", cant: "Hacer sonidos o decir cualquier palabra." },
-  { id: 4, name: "Ronda ⚡", baseSeconds: 15, can: "Un intento por tarjeta. Rápido.", cant: "Dormirse 😅" },
+  { id: 1, name: "Ronda 1", baseSeconds: 90, can: "Hablar, actuar, hacer sonidos, señalar, cantar, tararear.", cant: "Decir la palabra o una parte clara de la palabra." },
+  { id: 2, name: "Ronda 2", baseSeconds: 90, can: "Decir UNA sola palabra y actuar.", cant: "Decir la palabra, tararear/cantar, hacer sonidos." },
+  { id: 3, name: "Ronda 3", baseSeconds: 90, can: "Solo actuar.", cant: "Hacer sonidos o decir cualquier palabra." },
+  { id: 4, name: "Ronda ⚡", baseSeconds: 45, can: "Un intento por tarjeta. Rápido.", cant: "Dormirse 😅" },
 ];
 
 // Theme completo por equipo
