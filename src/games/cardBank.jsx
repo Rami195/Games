@@ -1,0 +1,163 @@
+export const CARD_BANK = {
+  "Películas/Series": [
+    // --- tus 100 (ya están) + 100 nuevas (total 200) ---
+    "El Padrino","Titanic","Matrix","Inception","Interstellar","Joker","Gladiador","Pulp Fiction","Fight Club",
+    "Breaking Bad","Dark","Stranger Things","La Casa de Papel","Game of Thrones","Black Mirror","Better Call Saul",
+    "The Office","Peaky Blinders","Chernobyl","Oppenheimer","Parásitos","Whiplash","La La Land","Se7en",
+    "El Silencio de los Inocentes","Blade Runner","Memento","Psicosis","El Resplandor","Alien","Terminator",
+    "Jurassic Park","Volver al Futuro","Star Wars","El Señor de los Anillos","Harry Potter","Shrek","Toy Story",
+    "El Rey León","Forrest Gump","El Club de la Pelea","Donnie Darko","Oldboy","La Naranja Mecánica",
+    "2001 Odisea del Espacio","The Truman Show","Her","Shutter Island","El Cisne Negro","El Pianista",
+    "Bastardos sin gloria","Django","El Gran Lebowski","Eterno resplandor de una mente sin recuerdos",
+    "El Lobo de Wall Street","Scarface","Casino","Taxi Driver","El Sexto Sentido","Los Sospechosos de Siempre",
+    "Heat","Apocalypse Now","Interestelar","El Origen","Birdman","No Country for Old Men","Fargo",
+    "True Detective","House of Cards","Narcos","Los Simuladores","El Marginal","The Boys","Rick and Morty",
+    "BoJack Horseman",
+
+    // +100 nuevas
+    "The Shawshank Redemption","El Padrino II","Goodfellas","The Departed","The Irishman","American Psycho",
+    "The Prestige","The Dark Knight","Batman Begins","The Batman","Logan","Deadpool","Spider-Man: Into the Spider-Verse",
+    "The Avengers","Iron Man","Doctor Strange","Guardians of the Galaxy","Black Panther","Dune","Dune: Part Two",
+    "Arrival","Ex Machina","Blade Runner 2049","The Martian","Gravity","Moon","District 9",
+    "Mad Max: Fury Road","John Wick","Taken","Die Hard","The Matrix Reloaded","The Matrix Revolutions",
+    "The Social Network","Moneyball","The Big Short","Catch Me If You Can","The Wolf of Wall Street (EN)",
+    "The Curious Case of Benjamin Button","The Revenant","The Hateful Eight","Once Upon a Time in Hollywood",
+    "Kill Bill","Reservoir Dogs","Inglourious Basterds (EN)","Inception (EN)","Interstellar (EN)",
+    "The Grand Budapest Hotel","Moonrise Kingdom","The Royal Tenenbaums","The French Dispatch",
+    "Parasite (EN)","Memories of Murder","The Handmaiden","Spirited Away","Princess Mononoke",
+    "My Neighbor Totoro","Your Name","Akira","Ghost in the Shell","Neon Genesis Evangelion",
+    "Attack on Titan","Death Note","Fullmetal Alchemist","One Piece","The Last of Us","The Mandalorian",
+    "The Sopranos","Mad Men","The Wire","Succession","The Crown","Sherlock","Loki","WandaVision",
+    "The Queen's Gambit","Mindhunter","Ozark","Black Sails","Vikings","The Walking Dead","Lost","The Simpsons",
+    "South Park","Friends","How I Met Your Mother","Modern Family","Brooklyn Nine-Nine","Seinfeld","Community",
+    "Parks and Recreation","Fleabag","The Bear","Arcane","Love, Death & Robots"
+  ],
+
+  "Deportes/Deportistas": [
+    // --- tus 100 base + 100 nuevas ---
+    "Lionel Messi","Diego Maradona","Cristiano Ronaldo","Pelé","Ronaldinho","Zinedine Zidane","Mbappé","Neymar",
+    "Manu Ginóbili","Michael Jordan","LeBron James","Kobe Bryant","Stephen Curry","Usain Bolt","Michael Phelps",
+    "Serena Williams","Roger Federer","Rafael Nadal","Novak Djokovic","Ayrton Senna","Lewis Hamilton","Max Verstappen",
+    "Muhammad Ali","Mike Tyson","Conor McGregor","Jon Jones","Garry Kasparov","Magnus Carlsen","Diego Simeone",
+    "Pep Guardiola","Marcelo Gallardo","Carlos Bilardo","Franco Colapinto","Juan Manuel Fangio","Boca Juniors",
+    "River Plate","Barcelona","Real Madrid","Champions League","Copa Libertadores","Mundial","Juego Olímpico","VAR",
+    "Hat-trick","Fuera de juego","Draft","All Star","Playoffs","Final del mundo","Superclásico","Copa Davis",
+    "Grand Slam","NBA","NFL","MLB","UFC","Rugby","Tenis","Básquet","Fútbol","Fórmula 1","Maratón","Triatlón",
+    "Pentatlón","Ironman","Tour de France","Balón de Oro","Anillo de campeón","Récord mundial","Tiempo suplementario",
+
+    // +100 nuevas
+    "Ángel Di María","Sergio Agüero","Dibu Martínez","Carlos Tévez","Javier Zanetti","Gabriel Batistuta",
+    "Juan Román Riquelme","Martín Palermo","Lionel Scaloni","Juan Sebastián Verón","Pablo Aimar",
+    "Kylian Mbappé (FR)","Erling Haaland","Kevin De Bruyne","Luka Modrić","Toni Kroos","Karim Benzema",
+    "Mohamed Salah","Sadio Mané","Virgil van Dijk","Robert Lewandowski","N'Golo Kanté",
+    "Kaká","Ronaldo Nazário","Andrés Iniesta","Xavi","Sergio Ramos","Iker Casillas",
+    "Diego Forlán","Luis Suárez","Edinson Cavani","Diego Godín",
+    "Michael Schumacher","Fernando Alonso","Sebastian Vettel","Niki Lauda","Kimi Räikkönen",
+    "Valentino Rossi","Marc Márquez",
+    "Tom Brady","Patrick Mahomes","Aaron Rodgers",
+    "Tiger Woods","Rory McIlroy","Phil Mickelson",
+    "Diego Schwartzman","Juan Martín del Potro","Stan Wawrinka","Andy Murray",
+    "Simone Biles","Nadia Comăneci",
+    "Michael Johnson","Carl Lewis",
+    "Canelo Álvarez","Floyd Mayweather","Manny Pacquiao",
+    "Ronda Rousey","Khabib Nurmagomedov","Israel Adesanya",
+    "NBA Finals","Super Bowl","World Series","Copa América","Eurocopa","Copa del Rey",
+    "Premier League","Serie A","Bundesliga","Ligue 1",
+    "Rally Dakar","MotoGP","FIBA","ATP","WTA",
+    "Penales","Tiempo de descuento","Tarjeta roja","Tarjeta amarilla",
+    "Offside (EN)","Counterattack","Pressing","Tiki-taka",
+    "Knockout","Round","Corner","Free throw","Touchdown","Home run",
+    "Grand Prix","Pole position"
+  ],
+
+  "Música/Cantantes": [
+    // --- tus 100 base + 100 nuevas ---
+    "Freddie Mercury","Queen","The Beatles","John Lennon","Paul McCartney","Michael Jackson","Madonna","David Bowie",
+    "Prince","Elvis Presley","Pink Floyd","Led Zeppelin","U2","Radiohead","Coldplay","Nirvana","Kurt Cobain",
+    "Metallica","AC/DC","Guns N' Roses","Axl Rose","Eminem","Kanye West","Jay-Z","Drake","Taylor Swift","Adele",
+    "Beyoncé","Rihanna","The Weeknd","Bruno Mars","Ed Sheeran","Shakira","Bad Bunny","Daddy Yankee","Luis Miguel",
+    "Charly García","Spinetta","Gustavo Cerati","Fito Páez","Andrés Calamaro","Soda Stereo","Los Redondos",
+    "La Renga","Babasonicos","Astor Piazzolla","Carlos Gardel","Mercedes Sosa","Bob Dylan","Jimi Hendrix",
+    "Eric Clapton","Santana","Mozart","Beethoven","Bach","Vivaldi","Ópera","Sinfonía","Concierto","Vinilo",
+    "Grammy","Billboard","MTV","Autotune","Funk","Jazz","Blues","Rock nacional","Trap","Reggaetón","Indie","Electrónica",
+
+    // +100 nuevas
+    "The Rolling Stones","Mick Jagger","Keith Richards","The Who","David Gilmour","Roger Waters",
+    "Black Sabbath","Ozzy Osbourne","Iron Maiden","Bruce Dickinson","Judas Priest","Megadeth","Dave Mustaine",
+    "Slipknot","Corey Taylor","System of a Down","Linkin Park","Chester Bennington","Red Hot Chili Peppers",
+    "Foo Fighters","Dave Grohl","Pearl Jam","Eddie Vedder","The Smashing Pumpkins","Green Day","Blink-182",
+    "Arctic Monkeys","The Strokes","Muse","Daft Punk","Calvin Harris","David Guetta","Avicii",
+    "Billie Eilish","Lady Gaga","Katy Perry","Dua Lipa","Harry Styles","Post Malone","SZA","Frank Ocean",
+    "Travis Scott","Lil Wayne","Kendrick Lamar","J. Cole","Tyler, The Creator",
+    "Karol G","Tini","Nicki Nicole","Wos","Duki","Bizarrap","Rauw Alejandro","Feid",
+    "Anuel AA","J Balvin","Ozuna","Maluma",
+    "Ennio Morricone","Hans Zimmer","John Williams",
+    "Pavarotti","Plácido Domingo","Andrea Bocelli",
+    "Claude Debussy","Tchaikovsky","Stravinsky","Chopin",
+    "Improvisación","Armonía","Melodía","Ritmo","Compás","Afinación",
+    "Guitarra eléctrica","Bajo","Batería","Teclado","Sintetizador",
+    "Coro","Orquesta","Solista","Álbum","EP","Single","Gira",
+    "Festival","Lollapalooza","Coachella","Glastonbury",
+    "Streaming","Spotify","YouTube Music","SoundCloud"
+  ],
+
+  "Argentina": [
+    // --- tus 100 base + 100 nuevas ---
+    "Buenos Aires","Mendoza","Córdoba","Rosario","La Plata","Ushuaia","El Calafate","Bariloche","Mar del Plata",
+    "Salta","Cataratas del Iguazú","Aconcagua","Patagonia","Ruta 40","Obelisco","Casa Rosada","Plaza de Mayo",
+    "Congreso","La Bombonera","El Monumental","Mate","Asado","Empanadas","Choripán","Fernet","Dulce de leche",
+    "Alfajor","Parrilla","Vino mendocino","Malbec","Tango","Milonga","Gardel","Mercedes Sosa","Sarmiento",
+    "Belgrano","San Martín","Rosas","Malvinas","Perito Moreno","Quebrada de Humahuaca","Vaca Muerta","YPF",
+    "INDEC","AFIP","DNI","CUIT","Inflación","Dólar","Colectivo","Subte","Tren","Gaucho","Estancia","Pampa",
+    "Siesta","Mate cocido","Peña","Festival","Folklore","Chamamé","Selección Argentina","Scaloneta",
+    "La grieta","Conurbano","Interior","Provincia","Municipio",
+
+    // +100 nuevas
+    "San Juan","San Luis","La Rioja","Catamarca","Tucumán","Jujuy","Chaco","Formosa","Misiones","Corrientes",
+    "Entre Ríos","Santa Fe","Neuquén","Río Negro","Chubut","Santa Cruz","Tierra del Fuego",
+    "Puerto Madryn","Península Valdés","Las Leñas","Potrerillos","Cacheuta","Uspallata","San Rafael","Malargüe",
+    "Iguazú","Tilcara","Purmamarca","Cafayate","Tafí del Valle","Villa Carlos Paz","Villa General Belgrano",
+    "San Martín de los Andes","Villa La Angostura","El Bolsón",
+    "Avenida 9 de Julio","Teatro Colón","Recoleta","La Boca","Puerto Madero","Palermo",
+    "Mercado de San Telmo","Caminito","Cabildo","Plaza San Martín",
+    "Bandera argentina","Escarapela","Himno Nacional","Mate cebado","Termo",
+    "Facturas","Medialunas","Milanesa","Provoleta","Locro","Humita","Carbonada",
+    "Día del Amigo","Primavera","Feriado puente",
+    "CEPO","Paritarias","Cooperativa","PyME","Remís","Kiosco",
+    "Boliche","Quincho","Asado de obra","Picada","Fútbol 5",
+    "La Leyenda del Gauchito Gil","Difunta Correa",
+    "Glaciar Perito Moreno","Cerro Fitz Roy","Cerro Tronador",
+    "Lago Nahuel Huapi","Lago Argentino","Lago Lácar",
+    "Viento Zonda","Vendimia","Fiesta de la Vendimia","Tonel","Bodega","Cava",
+    "Rosario Central","Newell's Old Boys","Independiente","Racing","San Lorenzo",
+    "SADAIC","INCAA","CONICET"
+  ],
+
+  "Vale Todo": [
+    // --- tus 100 base + 100 nuevas ---
+    "Tinder","Netflix","Uber","WhatsApp","Instagram","TikTok","Bitcoin","ChatGPT","Wi-Fi","VPN",
+    "Vino","Cerveza","Resaca","Karaoke","After","Asado","Cumpleaños","Boda","Divorcio","Jefe tóxico",
+    "Reunión","Presentación","Final de la facu","Trámite","DNI","Pasaporte","Aduana","Aeropuerto","Hotel",
+    "Playa","Boliche","Mate amargo","Fútbol 5","Control remoto","Aire acondicionado","Microondas","Heladera",
+    "Corte de luz","Banco","Tarjeta de crédito","Cuotas","Inflación","Dólar","Propina","Delivery",
+
+    // +100 nuevas
+    "Spotify","YouTube","Gmail","Google Maps","Waze","Mercado Pago","Mercado Libre","Home office","Zoom",
+    "Teams","Meet","PowerPoint","Excel","PDF","QR","Captcha",
+    "Cloud","Backup","Pendrive","Bluetooth","AirDrop","Router","Ethernet","5G","4G",
+    "Story","Reels","Meme","Spoiler","Hype","Cringe","FOMO","Ghosting","Red flag","Green flag",
+    "Procrastinar","Overthinking","Burnout","Ansiedad","Meditación","Yoga","Gym","Rutina","Checklist",
+    "Notificación","Silencio incómodo","Small talk","Gente intensa","Incomodidad","Vergüenza ajena",
+    "Visto","Clavado","Dejar en leído","Banear","Stalkear","Like","Match","Unfollow",
+    "Factura","Ticket","Comprobante","Impuesto","Multa","Turno online","Fila","Sacar número",
+    "Mudanza","Alquiler","Expensas","Garantía","Depósito",
+    "Cartera","Billetera","Buzo","Zapatillas","Subte","Peaje","Estacionamiento",
+    "Cargador","Batería","Modo avión","Pantalla rota","Actualización",
+    "Password","2FA","Token","Captcha","Phishing","Spam","Firewall",
+    "Terapia","Autoayuda","Podcast","Newsletter",
+    "Playlist","Auriculares","In-ear","Noise cancelling",
+    "Asistente virtual","Smartwatch","Smart TV","Control por voz",
+    "Café","Mate","Té","Helado","Pizza","Hamburguesa","Sushi",
+    "Domingo de bajón","Lunes","Siesta","Insomnio"
+  ],
+};

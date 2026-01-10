@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-const STORAGE_KEY = "saymyname-game-state-v3";
+const STORAGE_KEY = "saymyname-game-state-v4";
 
 function loadState() {
   try {
@@ -27,68 +27,79 @@ function formatTime(totalSeconds) {
 }
 
 // ---------- Banco de cartas ----------
-const CARD_BANK = {
-  "Películas/Series": [
-    "El Padrino","Titanic","Matrix","Inception","Interstellar","Joker","Gladiador","Pulp Fiction",
-    "Fight Club","Breaking Bad","Dark","Stranger Things","La Casa de Papel","Game of Thrones",
-    "Harry Potter","El Señor de los Anillos","Star Wars","Black Mirror","The Office","Peaky Blinders",
-    "Parásitos","Whiplash","La La Land","Se7en","El Silencio de los Inocentes","Shrek","Toy Story",
-    "El Rey León","The Boys","Better Call Saul","Narcos","El Marginal","Los Simuladores",
-    "Casados con Hijos","Chernobyl","Oppenheimer","Barbie","Django","Bastardos sin gloria",
-    "Volver al Futuro","Jurassic Park","Terminator","Alien","Mad Max","Blade Runner","Memento",
-    "El Resplandor","Psicosis","El Sexto Sentido"
-  ],
-  "Deportes/Deportistas": [
-    "Lionel Messi","Diego Maradona","Cristiano Ronaldo","Neymar","Mbappé","Pelé","Ronaldinho",
-    "Stephen Curry","Michael Jordan","Kobe Bryant","LeBron James","Manu Ginóbili","Juan Martín del Potro",
-    "Novak Djokovic","Rafael Nadal","Roger Federer","Serena Williams","Usain Bolt","Michael Phelps",
-    "Max Verstappen","Lewis Hamilton","Franco Colapinto","Diego Simeone","Pep Guardiola",
-    "Carlos Tévez","Ángel Di María","Dibu Martínez","Sergio Agüero",
-    "Fútbol","Básquet","Tenis","Rugby","Fórmula 1","Mundial","Copa Libertadores",
-    "Champions League","Superclásico","Boca Juniors","River Plate","Ajedrez","Garry Kasparov",
-    "UFC","Conor McGregor","Mike Tyson","Muhammad Ali"
-  ],
-  "Música/Cantantes": [
-    "Michael Jackson","Madonna","Freddie Mercury","Queen","The Beatles","John Lennon","Paul McCartney",
-    "David Bowie","Eminem","Drake","Taylor Swift","Adele","Rihanna","Beyoncé",
-    "The Weeknd","Bruno Mars","Ed Sheeran","Shakira","Bad Bunny","Daddy Yankee","Karol G",
-    "Rosalía","Luis Miguel","Soda Stereo","Gustavo Cerati","Charly García","Spinetta","Fito Páez",
-    "Andrés Calamaro","Los Redondos","La Renga","Duki","Bizarrap","Tini","Nicki Nicole","Wos",
-    "Metallica","AC/DC","Coldplay","U2","Pink Floyd","Guns N' Roses","Axl Rose",
-    "Nirvana","Kurt Cobain","Lady Gaga","Billie Eilish"
-  ],
-  "Argentina": [
-    "Buenos Aires","Mendoza","Córdoba","Rosario","Bariloche","Mar del Plata","Ushuaia","El Calafate",
-    "Cataratas del Iguazú","Aconcagua","Obelisco","Casa Rosada","Plaza de Mayo",
-    "La Bombonera","El Monumental","Ruta 40","Patagonia","Mate","Asado","Fernet","Dulce de leche",
-    "Alfajor","Empanadas","Choripán","Parrilla","Vino mendocino","Tango","Gardel","Mercedes Sosa",
-    "Soda Stereo","Malvinas","Perito Moreno","San Martín de los Andes",
-    "Selección Argentina","Messi","Maradona"
-  ],
-  "Vale Todo": [
-    "Tinder","Netflix","Uber","WhatsApp","Instagram","TikTok","Bitcoin","ChatGPT","Wi-Fi","VPN",
-    "Vino","Cerveza","Resaca","Karaoke","After","Asado","Cumpleaños",
-    "Boda","Divorcio","Jefe tóxico","Reunión","Presentación","Final de la facu","Trámite",
-    "DNI","Pasaporte","Aduana","Aeropuerto","Hotel","Playa","Boliche","Mate amargo",
-    "Fútbol 5","Control remoto","Aire acondicionado","Microondas","Heladera","Corte de luz",
-    "Banco","Tarjeta de crédito","Cuotas","Inflación","Dólar","Propina","Delivery"
-  ],
-};
+import { CARD_BANK } from "./cardBank";
 
-// ---------- Rondas ----------
+// ---------- Rondas (✅ 3 rondas) ----------
 const ROUNDS = [
-  { id: 1, name: "Ronda 1", baseSeconds: 90, can: "Hablar, actuar, hacer sonidos, señalar, cantar, tararear.", cant: "Decir la palabra o una parte clara de la palabra." },
-  { id: 2, name: "Ronda 2", baseSeconds: 90, can: "Decir UNA sola palabra y actuar.", cant: "Decir la palabra, tararear/cantar, hacer sonidos." },
-  { id: 3, name: "Ronda 3", baseSeconds: 90, can: "Solo actuar.", cant: "Hacer sonidos o decir cualquier palabra." },
-  { id: 4, name: "Ronda ⚡", baseSeconds: 45, can: "Un intento por tarjeta. Rápido.", cant: "Dormirse 😅" },
+  {
+    id: 1,
+    name: "Ronda 1 — Mímica",
+    defaultSeconds: 30,
+    can: "Solo actuar / mímica (sin hablar, sin sonidos).",
+    cant: "Decir palabras, hacer sonidos, cantar/tararear.",
+  },
+  {
+    id: 2,
+    name: "Ronda 2 — Una palabra",
+    defaultSeconds: 30,
+    can: "Decir UNA sola palabra.",
+    cant: "Decir más de una palabra, cantar/tararear, hacer sonidos.",
+  },
+  {
+    id: 3,
+    name: "Ronda ⚡ — Relámpago",
+    defaultSeconds: 15,
+    can: "Decir UNA sola palabra. Pueden adivinar todos los equipos.",
+    cant: "Decir más de una palabra, hacer sonidos, cantar/tararear.",
+  },
 ];
 
 // Theme completo por equipo
 const TEAM_THEME = [
-  { name: "Azul", pageBg: "bg-gradient-to-br from-sky-950/35 via-slate-950/30 to-black/40", border: "border-sky-400/25", ring: "ring-sky-400/25", softBg: "bg-sky-500/5", dot: "text-sky-300", badgeBg: "bg-sky-500/15", badgeText: "text-sky-200", word: "text-sky-200" },
-  { name: "Rojo", pageBg: "bg-gradient-to-br from-rose-950/30 via-slate-950/30 to-black/40", border: "border-rose-400/25", ring: "ring-rose-400/25", softBg: "bg-rose-500/5", dot: "text-rose-300", badgeBg: "bg-rose-500/15", badgeText: "text-rose-200", word: "text-rose-200" },
-  { name: "Verde", pageBg: "bg-gradient-to-br from-emerald-950/28 via-slate-950/30 to-black/40", border: "border-emerald-400/25", ring: "ring-emerald-400/25", softBg: "bg-emerald-500/5", dot: "text-emerald-300", badgeBg: "bg-emerald-500/15", badgeText: "text-emerald-200", word: "text-emerald-200" },
-  { name: "Violeta", pageBg: "bg-gradient-to-br from-violet-950/28 via-slate-950/30 to-black/40", border: "border-violet-400/25", ring: "ring-violet-400/25", softBg: "bg-violet-500/5", dot: "text-violet-300", badgeBg: "bg-violet-500/15", badgeText: "text-violet-200", word: "text-violet-200" },
+  {
+    name: "Azul",
+    pageBg: "bg-gradient-to-br from-sky-950/35 via-slate-950/30 to-black/40",
+    border: "border-sky-400/25",
+    ring: "ring-sky-400/25",
+    softBg: "bg-sky-500/5",
+    dot: "text-sky-300",
+    badgeBg: "bg-sky-500/15",
+    badgeText: "text-sky-200",
+    word: "text-sky-200",
+  },
+  {
+    name: "Rojo",
+    pageBg: "bg-gradient-to-br from-rose-950/30 via-slate-950/30 to-black/40",
+    border: "border-rose-400/25",
+    ring: "ring-rose-400/25",
+    softBg: "bg-rose-500/5",
+    dot: "text-rose-300",
+    badgeBg: "bg-rose-500/15",
+    badgeText: "text-rose-200",
+    word: "text-rose-200",
+  },
+  {
+    name: "Verde",
+    pageBg: "bg-gradient-to-br from-emerald-950/28 via-slate-950/30 to-black/40",
+    border: "border-emerald-400/25",
+    ring: "ring-emerald-400/25",
+    softBg: "bg-emerald-500/5",
+    dot: "text-emerald-300",
+    badgeBg: "bg-emerald-500/15",
+    badgeText: "text-emerald-200",
+    word: "text-emerald-200",
+  },
+  {
+    name: "Violeta",
+    pageBg: "bg-gradient-to-br from-violet-950/28 via-slate-950/30 to-black/40",
+    border: "border-violet-400/25",
+    ring: "ring-violet-400/25",
+    softBg: "bg-violet-500/5",
+    dot: "text-violet-300",
+    badgeBg: "bg-violet-500/15",
+    badgeText: "text-violet-200",
+    word: "text-violet-200",
+  },
 ];
 
 function safeUUID() {
@@ -96,7 +107,6 @@ function safeUUID() {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-// inputs numéricos controlados
 function toNumberOrNaN(v) {
   const n = Number.parseInt(String(v), 10);
   return Number.isNaN(n) ? NaN : n;
@@ -106,6 +116,21 @@ function clampNumber(n, min, max) {
 }
 function onlyDigitsOrEmpty(v) {
   return v === "" || /^\d+$/.test(v);
+}
+
+function randomTeamIndex(teams) {
+  const t = Math.max(2, Math.min(4, teams || 2));
+  return Math.floor(Math.random() * t);
+}
+
+function winnerLabelFromScores(scores) {
+  if (!scores?.length) return "Empate";
+  const max = Math.max(...scores);
+  const winners = scores
+    .map((v, i) => ({ v, i }))
+    .filter((x) => x.v === max)
+    .map((x) => x.i);
+  return winners.length === 1 ? `Equipo ${winners[0] + 1}` : "Empate";
 }
 
 export default function SayMyNameGame({ onPlayingChange }) {
@@ -129,25 +154,40 @@ export default function SayMyNameGame({ onPlayingChange }) {
     return Array.from({ length: baseTeams }, (_, i) => String(arr[i] ?? 2));
   });
 
+  // ✅ tiempos configurables por ronda
+  const [roundSeconds, setRoundSeconds] = useState(() => {
+    const fromSaved = saved?.roundSeconds;
+    const base =
+      Array.isArray(fromSaved) && fromSaved.length === ROUNDS.length
+        ? fromSaved
+        : ROUNDS.map((r) => r.defaultSeconds);
+    return base.map((v) => String(v));
+  });
+
   const [roundIndex, setRoundIndex] = useState(() => saved?.roundIndex ?? 0);
   const [currentTeam, setCurrentTeam] = useState(() => saved?.currentTeam ?? 0);
   const [currentSlot, setCurrentSlot] = useState(() => saved?.currentSlot ?? 0);
   const [turnsDone, setTurnsDone] = useState(() => saved?.turnsDone ?? 0);
 
-  // ✅ aciertos (totales de la partida)
+  // ✅ aciertos acumulados de toda la partida (para ganador final)
   const [roundScores, setRoundScores] = useState(
     () => saved?.roundScores ?? Array.from({ length: saved?.teamsCount ?? 2 }, () => 0)
   );
+
+  // ✅ puntajes por ronda (para “quién ganó cada ronda”)
+  const [scoresByRound, setScoresByRound] = useState(() => {
+    const t = saved?.teamsCount ?? 2;
+    const base = saved?.scoresByRound;
+    if (Array.isArray(base) && base.length === ROUNDS.length) return base;
+    return Array.from({ length: ROUNDS.length }, () => Array.from({ length: t }, () => 0));
+  });
 
   // ✅ marcador global
   const [globalWins, setGlobalWins] = useState(
     () => saved?.globalWins ?? Array.from({ length: saved?.teamsCount ?? 2 }, () => 0)
   );
 
-  // ✅ deck de la ronda (se consume)
   const [deck, setDeck] = useState(() => saved?.deck ?? []);
-
-  // ✅ baseDeck: cartas “originales” para recargar cada ronda
   const [baseDeck, setBaseDeck] = useState(() => saved?.baseDeck ?? []);
 
   // timer
@@ -161,7 +201,11 @@ export default function SayMyNameGame({ onPlayingChange }) {
   const [draftParticipants, setDraftParticipants] = useState(() => saved?.draftParticipants ?? []);
   const [draftIndex, setDraftIndex] = useState(() => saved?.draftIndex ?? 0);
 
+  // ✅ equipo inicial aleatorio (ronda 1) + rotación por ronda
+  const [startTeamSeed, setStartTeamSeed] = useState(() => saved?.startTeamSeed ?? 0);
+
   const round = ROUNDS[roundIndex];
+  const isLightning = round?.id === 3;
   const topCard = deck?.[0] ?? null;
 
   // números
@@ -189,6 +233,7 @@ export default function SayMyNameGame({ onPlayingChange }) {
     onPlayingChange?.(phase === "play");
   }, [phase, onPlayingChange]);
 
+  // Ajustes cuando cambia teamsCount
   useEffect(() => {
     if (!teamsCountNum) return;
     const t = clampNumber(teamsCountNum, 2, 4);
@@ -197,8 +242,17 @@ export default function SayMyNameGame({ onPlayingChange }) {
     setGlobalWins((prev) => Array.from({ length: t }, (_, i) => prev?.[i] ?? 0));
     setMembersPerTeam((prev) => Array.from({ length: t }, (_, i) => prev?.[i] ?? "2"));
 
+    setScoresByRound((prev) => {
+      const base = Array.from({ length: ROUNDS.length }, (_, r) => {
+        const row = prev?.[r] ?? [];
+        return Array.from({ length: t }, (_, i) => row?.[i] ?? 0);
+      });
+      return base;
+    });
+
     setCurrentTeam((x) => Math.min(x, t - 1));
     setCurrentSlot((s) => Math.max(0, s));
+    setStartTeamSeed((seed) => (seed >= 0 ? Math.min(seed, t - 1) : 0));
   }, [teamsCountNum]);
 
   // Persistencia
@@ -215,6 +269,18 @@ export default function SayMyNameGame({ onPlayingChange }) {
       return clampNumber(n, 1, 12);
     });
 
+    const safeRoundSeconds = Array.from({ length: ROUNDS.length }, (_, i) => {
+      const raw = roundSeconds?.[i] ?? String(ROUNDS[i].defaultSeconds);
+      const n = toNumberOrNaN(raw);
+      if (Number.isNaN(n)) return ROUNDS[i].defaultSeconds;
+      return clampNumber(n, 5, 300);
+    });
+
+    const safeScoresByRound = Array.from({ length: ROUNDS.length }, (_, r) => {
+      const row = scoresByRound?.[r] ?? [];
+      return Array.from({ length: safeTeams }, (_, i) => row?.[i] ?? 0);
+    });
+
     const stateToSave = {
       phase,
       teamsCount: safeTeams,
@@ -222,13 +288,18 @@ export default function SayMyNameGame({ onPlayingChange }) {
       selectedCategories,
       membersPerTeam: safeMembers,
 
+      roundSeconds: safeRoundSeconds,
+
       roundIndex,
       currentTeam,
       currentSlot,
       turnsDone,
 
       roundScores,
+      scoresByRound: safeScoresByRound, // ✅
+
       globalWins,
+      startTeamSeed, // ✅
 
       deck,
       baseDeck,
@@ -247,12 +318,15 @@ export default function SayMyNameGame({ onPlayingChange }) {
     deckTotal,
     selectedCategories,
     membersPerTeam,
+    roundSeconds,
     roundIndex,
     currentTeam,
     currentSlot,
     turnsDone,
     roundScores,
+    scoresByRound,
     globalWins,
+    startTeamSeed,
     deck,
     baseDeck,
     secondsLeft,
@@ -284,7 +358,9 @@ export default function SayMyNameGame({ onPlayingChange }) {
   const sampleCount = quota * 2;
 
   function toggleCategory(cat) {
-    setSelectedCategories((prev) => (prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]));
+    setSelectedCategories((prev) =>
+      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
+    );
   }
 
   function buildCardsPool() {
@@ -319,6 +395,19 @@ export default function SayMyNameGame({ onPlayingChange }) {
     return participants;
   }
 
+  function getTurnSeconds(idx = roundIndex) {
+    const raw = roundSeconds?.[idx] ?? String(ROUNDS[idx]?.defaultSeconds ?? 30);
+    const n = toNumberOrNaN(raw);
+    if (Number.isNaN(n)) return ROUNDS[idx]?.defaultSeconds ?? 30;
+    return clampNumber(n, 5, 300);
+  }
+
+  // ✅ inicio de ronda: rota según seed (r0=seed, r1=seed+1, r2=seed+2 ...)
+  function getRoundStartTeam(rIdx) {
+    const t = safeTeamsForUI;
+    return (startTeamSeed + rIdx) % t;
+  }
+
   function startDraft() {
     const pool = buildCardsPool();
     const total = deckTotalNum;
@@ -328,7 +417,9 @@ export default function SayMyNameGame({ onPlayingChange }) {
       return;
     }
     if (total % totalParticipants !== 0) {
-      alert(`El tamaño del mazo (${total}) debe ser múltiplo del total de participantes (${totalParticipants}).`);
+      alert(
+        `El tamaño del mazo (${total}) debe ser múltiplo del total de participantes (${totalParticipants}).`
+      );
       return;
     }
 
@@ -356,14 +447,14 @@ export default function SayMyNameGame({ onPlayingChange }) {
 
     // limpiar juego previo
     setRoundScores(Array.from({ length: safeTeamsForUI }, () => 0));
+    setScoresByRound(Array.from({ length: ROUNDS.length }, () => Array.from({ length: safeTeamsForUI }, () => 0)));
+
     setGlobalWins((prev) => Array.from({ length: safeTeamsForUI }, (_, i) => prev?.[i] ?? 0));
 
     setRoundIndex(0);
-    setCurrentTeam(0);
-    setCurrentSlot(0);
     setTurnsDone(0);
 
-    setSecondsLeft(ROUNDS[0].baseSeconds);
+    setSecondsLeft(getTurnSeconds(0));
     setRunning(false);
 
     setDeck([]);
@@ -390,26 +481,33 @@ export default function SayMyNameGame({ onPlayingChange }) {
   }
 
   function finalizeDraftToDeck() {
-    const chosen = draftParticipants.flatMap((pp) => pp.options.filter((c) => pp.picks.includes(c.id)));
+    const chosen = draftParticipants.flatMap((pp) =>
+      pp.options.filter((c) => pp.picks.includes(c.id))
+    );
 
     if (chosen.length !== deckTotalNum) {
       alert(`Error: mazo final tiene ${chosen.length} cartas y debería tener ${deckTotalNum}.`);
       return;
     }
 
-    // ✅ baseDeck se usa para recargar cada ronda
     const base = shuffle(chosen);
     setBaseDeck(base);
     setDeck(shuffle(base)); // ronda 1
 
     setRoundScores(Array.from({ length: safeTeamsForUI }, () => 0));
+    setScoresByRound(Array.from({ length: ROUNDS.length }, () => Array.from({ length: safeTeamsForUI }, () => 0)));
 
     setRoundIndex(0);
-    setCurrentTeam(0);
-    setCurrentSlot(0);
     setTurnsDone(0);
 
-    setSecondsLeft(ROUNDS[0].baseSeconds);
+    // ✅ seed aleatorio para ronda 1, y a partir de ahí rota
+    const seed = randomTeamIndex(safeTeamsForUI);
+    setStartTeamSeed(seed);
+
+    setCurrentTeam(seed);
+    setCurrentSlot(0);
+
+    setSecondsLeft(getTurnSeconds(0));
     setRunning(false);
 
     setPhase("play");
@@ -452,23 +550,77 @@ export default function SayMyNameGame({ onPlayingChange }) {
     return { team: 0, slot: 0 };
   }
 
-  function getTurnSeconds() {
-    return ROUNDS[roundIndex]?.baseSeconds ?? 30;
+  // ✅ snapshot del ganador por ronda: se guarda cuando la ronda termina
+  function snapshotRoundResult(rIdx) {
+    setScoresByRound((prev) => {
+      const next = Array.from({ length: ROUNDS.length }, (_, r) => [...(prev?.[r] ?? [])]);
+      const row = next[rIdx] ?? [];
+      next[rIdx] = Array.from({ length: safeTeamsForUI }, (_, i) => row?.[i] ?? 0);
+
+      // guardamos el score actual acumulado de esa ronda
+      // (tomamos roundScores, pero eso es total de partida; entonces calculamos “aciertos de la ronda” con delta)
+      // ✅ Mejor: mantenemos “score de ronda actual” sumando aquí mismo en markGuessed.
+      // Para simplificar: guardamos el snapshot del score actual de ronda en `currentRoundScoresRef`:
+      return next;
+    });
   }
+
+  // ✅ score SOLO de la ronda actual (para poder decir quién ganó cada ronda)
+  const [currentRoundScores, setCurrentRoundScores] = useState(() => {
+    const t = saved?.teamsCount ?? 2;
+    return saved?.currentRoundScores ?? Array.from({ length: t }, () => 0);
+  });
+
+  // mantener currentRoundScores al cambiar equipos
+  useEffect(() => {
+    setCurrentRoundScores((prev) => Array.from({ length: safeTeamsForUI }, (_, i) => prev?.[i] ?? 0));
+  }, [safeTeamsForUI]);
+
+  // incluir en persistencia (rápido y útil)
+  useEffect(() => {
+    // nada: ya persiste arriba (lo metemos en stateToSave abajo)
+  }, []);
+
+  // 🔧 re-inyectar currentRoundScores en persistencia sin duplicar useEffect
+  // (lo agregamos al stateToSave del efecto grande, por eso lo sumamos a deps)
+  // -> lo agregamos aquí:
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {}, [currentRoundScores]);
+
+  // Reemplazamos el useEffect de persistencia para incluir currentRoundScores:
+  // (Ya está arriba; como no podemos “editar” ese bloque aquí, lo incluimos en stateToSave manualmente)
+  // ✅ Solución: guardamos también en localStorage justo aquí (idempotente).
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      parsed.currentRoundScores = currentRoundScores;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+    } catch {}
+  }, [currentRoundScores]);
 
   function advanceToNextRoundOrFinish() {
     const nextRound = roundIndex + 1;
 
+    // ✅ antes de avanzar: guardar ganador de ESTA ronda (roundIndex)
+    setScoresByRound((prev) => {
+      const next = Array.from({ length: ROUNDS.length }, (_, r) => {
+        const row = prev?.[r] ?? [];
+        return Array.from({ length: safeTeamsForUI }, (_, i) => row?.[i] ?? 0);
+      });
+      next[roundIndex] = Array.from({ length: safeTeamsForUI }, (_, i) => currentRoundScores?.[i] ?? 0);
+      return next;
+    });
+
     // ✅ si ya fue la última ronda => finalizar juego
     if (nextRound >= ROUNDS.length) {
-      // ganador por aciertos totales
       const max = Math.max(...roundScores);
       const winners = roundScores
         .map((v, i) => ({ v, i }))
         .filter((x) => x.v === max)
         .map((x) => x.i);
 
-      // si hay empate, no suma nadie
       if (winners.length === 1) {
         const winner = winners[0];
         setGlobalWins((prev) => prev.map((x, i) => (i === winner ? x + 1 : x)));
@@ -479,15 +631,22 @@ export default function SayMyNameGame({ onPlayingChange }) {
       return;
     }
 
-    // ✅ avanzar ronda: recargar deck con baseDeck
-    setRoundIndex(nextRound);
+    // ✅ avanzar ronda: recAssert
     setTurnsDone(0);
-    setCurrentTeam(0);
-    setCurrentSlot(0);
-    setSecondsLeft(ROUNDS[nextRound].baseSeconds);
-    setRunning(false);
 
+    // ✅ equipo inicial: rota según seed (no random cada ronda)
+    const startTeam = getRoundStartTeam(nextRound);
+    setCurrentTeam(startTeam);
+    setCurrentSlot(0);
+
+    setRunning(false);
     setDeck(shuffle(baseDeck));
+
+    setRoundIndex(nextRound);
+    setSecondsLeft(getTurnSeconds(nextRound));
+
+    // ✅ reset del score de la ronda nueva
+    setCurrentRoundScores(Array.from({ length: safeTeamsForUI }, () => 0));
   }
 
   // Timer
@@ -508,17 +667,15 @@ export default function SayMyNameGame({ onPlayingChange }) {
 
       const nextTurnsDone = turnsDone + 1;
 
-      // si terminaron los turnos pero todavía quedan cartas, pasamos al siguiente jugador
       if (nextTurnsDone < totalTurnsThisRound) {
         setTurnsDone(nextTurnsDone);
         const next = getNextTurn(currentTeam, currentSlot);
         setCurrentTeam(next.team);
         setCurrentSlot(next.slot);
-        setSecondsLeft(getTurnSeconds());
+        setSecondsLeft(getTurnSeconds(roundIndex));
         return;
       }
 
-      // ✅ terminaron los turnos de la ronda => avanza de ronda
       setTurnsDone(nextTurnsDone);
       advanceToNextRoundOrFinish();
       return;
@@ -538,11 +695,12 @@ export default function SayMyNameGame({ onPlayingChange }) {
     deck.length,
     baseDeck.length,
     roundScores,
+    currentRoundScores,
   ]);
 
   function startTurn() {
     if (deck.length === 0) return;
-    setSecondsLeft(getTurnSeconds());
+    setSecondsLeft(getTurnSeconds(roundIndex));
     setRunning(true);
   }
 
@@ -550,16 +708,17 @@ export default function SayMyNameGame({ onPlayingChange }) {
     setRunning((v) => !v);
   }
 
-  function markGuessed() {
+  // ✅ permite elegir a qué equipo sumar (relámpago)
+  function markGuessed(teamToScore = currentTeam) {
     if (!topCard || !running) return;
 
-    setRoundScores((prev) => prev.map((s, i) => (i === currentTeam ? s + 1 : s)));
+    // total de partida
+    setRoundScores((prev) => prev.map((s, i) => (i === teamToScore ? s + 1 : s)));
 
-    setDeck((prev) => {
-      const nextDeck = prev.slice(1);
-      // ✅ si con esto se acabó, la lógica del useEffect avanza de ronda
-      return nextDeck;
-    });
+    // score de la ronda actual
+    setCurrentRoundScores((prev) => prev.map((s, i) => (i === teamToScore ? s + 1 : s)));
+
+    setDeck((prev) => prev.slice(1));
   }
 
   function passCard() {
@@ -578,13 +737,19 @@ export default function SayMyNameGame({ onPlayingChange }) {
     setSelectedCategories([categories[0]].filter(Boolean));
     setMembersPerTeam(["2", "2"]);
 
+    setRoundSeconds(ROUNDS.map((r) => String(r.defaultSeconds)));
+
     setRoundIndex(0);
     setCurrentTeam(0);
     setCurrentSlot(0);
     setTurnsDone(0);
 
     setRoundScores([0, 0]);
+    setCurrentRoundScores([0, 0]);
+    setScoresByRound(Array.from({ length: ROUNDS.length }, () => [0, 0]));
+
     setGlobalWins([0, 0]);
+    setStartTeamSeed(0);
 
     setDeck([]);
     setBaseDeck([]);
@@ -600,14 +765,23 @@ export default function SayMyNameGame({ onPlayingChange }) {
 
   const membersThisTeam = membersPerTeamNum[currentTeam] || 1;
 
-  // Ganador final (results)
-  const maxRound = roundScores.length ? Math.max(...roundScores) : 0;
-  const roundWinners = roundScores
-    .map((v, i) => ({ v, i }))
-    .filter((x) => x.v === maxRound)
-    .map((x) => x.i);
+  // ✅ Ganador final (results) por total de partida
+  const finalWinner = winnerLabelFromScores(roundScores);
+  const finalWinnerText = finalWinner === "Empate" ? "Empate" : `Ganador: ${finalWinner}`;
 
-  const winnerLabel = roundWinners.length === 1 ? `Ganó el Equipo ${roundWinners[0] + 1}` : "Empate";
+  // ✅ Ganador por ronda (results)
+  const perRoundWinners = useMemo(() => {
+    const list = [];
+    for (let r = 0; r < ROUNDS.length; r++) {
+      const row = scoresByRound?.[r] ?? Array.from({ length: safeTeamsForUI }, () => 0);
+      list.push({
+        roundName: ROUNDS[r].name,
+        winner: winnerLabelFromScores(row),
+        row,
+      });
+    }
+    return list;
+  }, [scoresByRound, safeTeamsForUI]);
 
   return (
     <div className="space-y-4">
@@ -617,7 +791,7 @@ export default function SayMyNameGame({ onPlayingChange }) {
           <div>
             <h2 className="text-2xl font-bold">🎤 Say My Name</h2>
             <p className="text-slate-300">
-              Draft por participantes + turnos automáticos + mazo por ronda (se recarga).
+              3 rondas (Mímica → 1 palabra → ⚡ Relámpago) + draft por participantes + mazo por ronda (se recarga).
             </p>
           </div>
 
@@ -703,6 +877,40 @@ export default function SayMyNameGame({ onPlayingChange }) {
               </div>
             </div>
 
+            {/* ✅ tiempos por ronda */}
+            <div className="space-y-2 sm:col-span-2">
+              <label className="text-sm text-slate-300">Tiempo por ronda (segundos)</label>
+              <div className="grid gap-2 sm:grid-cols-3">
+                {ROUNDS.map((r, idx) => (
+                  <div key={r.id} className="rounded-xl border border-white/10 bg-black/20 p-3">
+                    <div className="text-xs text-slate-300 mb-2">{r.name}</div>
+                    <input
+                      type="text"
+                      value={roundSeconds[idx] ?? String(r.defaultSeconds)}
+                      inputMode="numeric"
+                      pattern="\d*"
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        if (!onlyDigitsOrEmpty(v)) return;
+                        setRoundSeconds((prev) => prev.map((x, i) => (i === idx ? v : x)));
+                      }}
+                      onBlur={() => {
+                        const raw = roundSeconds[idx] ?? "";
+                        const n = toNumberOrNaN(raw);
+                        const safe = Number.isNaN(n) ? r.defaultSeconds : clampNumber(n, 5, 300);
+                        setRoundSeconds((prev) => prev.map((x, i) => (i === idx ? String(safe) : x)));
+                      }}
+                      className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
+                    />
+                    <div className="mt-2 text-xs text-slate-400">Min: 5s • Max: 300s</div>
+                  </div>
+                ))}
+              </div>
+              <div className="text-xs text-slate-400 mt-2">
+                El equipo que empieza la Ronda 1 es <b>al azar</b> y en cada ronda siguiente empieza el <b>siguiente equipo</b>.
+              </div>
+            </div>
+
             <div className="space-y-2 sm:col-span-2">
               <label className="text-sm text-slate-300">Integrantes por equipo</label>
               <div className="grid gap-2 sm:grid-cols-2">
@@ -712,7 +920,13 @@ export default function SayMyNameGame({ onPlayingChange }) {
                     <div key={i} className="rounded-xl border border-white/10 bg-black/20 p-3">
                       <div className="text-xs text-slate-300 mb-2">
                         Equipo {i + 1}{" "}
-                        <span className={["ml-2 rounded-lg px-2 py-0.5 text-[11px]", t.badgeBg, t.badgeText].join(" ")}>
+                        <span
+                          className={[
+                            "ml-2 rounded-lg px-2 py-0.5 text-[11px]",
+                            t.badgeBg,
+                            t.badgeText,
+                          ].join(" ")}
+                        >
                           {t.name}
                         </span>
                       </div>
@@ -775,7 +989,12 @@ export default function SayMyNameGame({ onPlayingChange }) {
                           : "border-white/10 bg-black/30 text-slate-300 hover:bg-black/20",
                       ].join(" ")}
                     >
-                      <input type="checkbox" checked={checked} onChange={() => toggleCategory(cat)} className="accent-emerald-500" />
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleCategory(cat)}
+                        className="accent-emerald-500"
+                      />
                       {cat}
                     </label>
                   );
@@ -843,7 +1062,9 @@ export default function SayMyNameGame({ onPlayingChange }) {
                   onClick={nextParticipantDraft}
                   className={[
                     "rounded-xl px-4 py-2 text-sm font-semibold text-black transition",
-                    pickedCount === mustPick ? "bg-emerald-500 hover:bg-emerald-400 cursor-pointer" : "bg-emerald-500/40 cursor-not-allowed",
+                    pickedCount === mustPick
+                      ? "bg-emerald-500 hover:bg-emerald-400 cursor-pointer"
+                      : "bg-emerald-500/40 cursor-not-allowed",
                   ].join(" ")}
                   disabled={pickedCount !== mustPick}
                 >
@@ -870,16 +1091,16 @@ export default function SayMyNameGame({ onPlayingChange }) {
                     onClick={() => togglePick(c.id)}
                     className={[
                       "text-left rounded-2xl border p-4 transition",
-                      checked ? [t.border, t.softBg, "ring-2", t.ring].join(" ") : "border-white/10 bg-black/20 hover:bg-black/30",
+                      checked
+                        ? [t.border, t.softBg, "ring-2", t.ring].join(" ")
+                        : "border-white/10 bg-black/20 hover:bg-black/30",
                     ].join(" ")}
                   >
                     <div className="text-xs text-slate-400">{c.category}</div>
                     <div className={["text-lg font-bold", checked ? t.badgeText : "text-white"].join(" ")}>
                       {c.answer}
                     </div>
-                    <div className="mt-2 text-xs text-slate-400">
-                      {checked ? "✅ Seleccionada" : "Tocar para seleccionar"}
-                    </div>
+                    <div className="mt-2 text-xs text-slate-400">{checked ? "✅ Seleccionada" : "Tocar para seleccionar"}</div>
                   </button>
                 );
               })}
@@ -908,7 +1129,9 @@ export default function SayMyNameGame({ onPlayingChange }) {
                   Integrante {currentSlot + 1}/{membersThisTeam}
                 </span>
 
-                <span className="text-slate-500 font-normal">• mazo por ronda</span>
+                <span className="text-slate-500 font-normal">
+                  • empieza ronda: <b>Equipo {getRoundStartTeam(roundIndex) + 1}</b>
+                </span>
               </div>
 
               <div className="mt-1 text-xs text-slate-400">
@@ -939,17 +1162,42 @@ export default function SayMyNameGame({ onPlayingChange }) {
             </div>
           </div>
 
-          {/* ✅ Botón arriba */}
-          <button
-            onClick={markGuessed}
-            disabled={!topCard || !running}
-            className={[
-              "w-full rounded-2xl px-5 py-3 font-semibold transition",
-              !topCard || !running ? "cursor-not-allowed bg-white/5 text-slate-400" : "cursor-pointer bg-emerald-500 text-black hover:bg-emerald-400",
-            ].join(" ")}
-          >
-            ✅ Adivinada (+1)
-          </button>
+          {/* ✅ Botones de puntaje */}
+          {!isLightning ? (
+            <button
+              onClick={() => markGuessed(currentTeam)}
+              disabled={!topCard || !running}
+              className={[
+                "w-full rounded-2xl px-5 py-3 font-semibold transition",
+                !topCard || !running
+                  ? "cursor-not-allowed bg-white/5 text-slate-400"
+                  : "cursor-pointer bg-emerald-500 text-black hover:bg-emerald-400",
+              ].join(" ")}
+            >
+              ✅ Adivinada (+1)
+            </button>
+          ) : (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {Array.from({ length: safeTeamsForUI }, (_, i) => {
+                const tt = TEAM_THEME[i] ?? TEAM_THEME[0];
+                return (
+                  <button
+                    key={i}
+                    onClick={() => markGuessed(i)}
+                    disabled={!topCard || !running}
+                    className={[
+                      "w-full rounded-2xl px-5 py-3 font-semibold transition",
+                      !topCard || !running
+                        ? "cursor-not-allowed bg-white/5 text-slate-400"
+                        : ["cursor-pointer bg-emerald-500 text-black hover:bg-emerald-400", "border", tt.border].join(" "),
+                    ].join(" ")}
+                  >
+                    ✅ Adivinada (+1) — Equipo {i + 1}
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           {/* Card */}
           {!running ? (
@@ -960,6 +1208,11 @@ export default function SayMyNameGame({ onPlayingChange }) {
               </div>
               <div className="mt-2 text-slate-300">
                 Tocá <b>Iniciar turno</b> para mostrar la tarjeta y empezar el tiempo.
+              </div>
+              <div className="mt-2 text-xs text-slate-400">
+                {isLightning
+                  ? "En ⚡ Relámpago, adivinan todos: el punto se lo das al equipo que acertó."
+                  : "El punto va al equipo del turno."}
               </div>
             </div>
           ) : (
@@ -972,7 +1225,6 @@ export default function SayMyNameGame({ onPlayingChange }) {
             />
           )}
 
-          {/* ✅ Botón abajo */}
           <button
             onClick={passCard}
             disabled={!topCard || !running}
@@ -986,7 +1238,8 @@ export default function SayMyNameGame({ onPlayingChange }) {
           </button>
 
           <div className="text-xs text-slate-400">
-            Si se acaban las cartas, <b>termina la ronda</b> y pasa automáticamente a la siguiente (recargando el mazo).
+            Si se acaban las cartas, <b>termina la ronda</b> y pasa automáticamente a la siguiente (recargando el mazo).<br />
+            El equipo que empieza la Ronda 1 es <b>al azar</b> y luego rota: R2 empieza el siguiente, R3 el siguiente.
           </div>
         </div>
       )}
@@ -997,15 +1250,32 @@ export default function SayMyNameGame({ onPlayingChange }) {
           <h3 className="text-lg font-semibold">Resultado final</h3>
 
           <div className="mt-3 rounded-xl border border-white/10 bg-black/20 p-4">
-            <div className="text-lg font-bold">{winnerLabel}</div>
-            <div className="text-sm text-slate-300">
-              Aciertos totales: {roundScores.map((v, i) => `E${i + 1}: ${v}`).join(" • ")}
+            <div className="text-lg font-bold">{finalWinnerText}</div>
+
+            <div className="mt-2 text-sm text-slate-300">
+              Puntos totales: {roundScores.map((v, i) => `E${i + 1}: ${v}`).join(" • ")}
             </div>
+
             <div className="mt-2 text-sm text-slate-300">
               Marcador global: {globalWins.map((v, i) => `E${i + 1}: ${v}`).join(" • ")}
             </div>
-            {roundWinners.length > 1 && (
-              <div className="mt-2 text-xs text-slate-400">Hubo empate: no se sumó +1 global a ningún equipo.</div>
+
+            <div className="mt-4 text-sm font-semibold text-slate-200">Ganador por ronda</div>
+            <div className="mt-2 space-y-2">
+              {perRoundWinners.map((r, idx) => (
+                <div key={idx} className="rounded-xl border border-white/10 bg-black/20 p-3">
+                  <div className="text-sm text-slate-200">
+                    <b>{r.roundName}:</b> {r.winner === "Empate" ? "Empate" : `Ganó ${r.winner}`}
+                  </div>
+                  <div className="text-xs text-slate-400 mt-1">
+                    {r.row.map((v, i) => `E${i + 1}: ${v}`).join(" • ")}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {finalWinner === "Empate" && (
+              <div className="mt-3 text-xs text-slate-400">Hubo empate en el total: no se sumó +1 global a ningún equipo.</div>
             )}
           </div>
 
