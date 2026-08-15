@@ -68,19 +68,19 @@ export default function MemoryMatchGame() {
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-2xl font-bold">🧠 Memory Match</h2>
-          <p className="text-slate-300">Encontrá todas las parejas.</p>
+          <p className="text-slate-600 dark:text-slate-300">Encontrá todas las parejas.</p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm">
+          <span className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm">
             Movidas: <b>{moves}</b>
           </span>
           <button
             onClick={reset}
-            className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm hover:bg-white/10"
+            className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm hover:bg-slate-200 dark:hover:bg-slate-700"
           >
             Reiniciar
           </button>
@@ -88,7 +88,7 @@ export default function MemoryMatchGame() {
       </div>
 
       {allMatched && (
-        <div className="mt-4 rounded-xl border border-white/10 bg-emerald-500/10 p-4 text-emerald-200">
+        <div className="mt-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-emerald-50 dark:bg-emerald-950 p-4 text-emerald-700 dark:text-emerald-300">
           ¡Ganaste! 🎉 Te tomó <b>{moves}</b> movidas.
         </div>
       )}
@@ -101,13 +101,16 @@ export default function MemoryMatchGame() {
               key={card.id}
               onClick={() => onFlip(card)}
               className={[
-                "aspect-square rounded-2xl border border-white/10 text-2xl",
-                "grid place-items-center transition",
-                isOpen ? "bg-white/10" : "bg-black/30 hover:bg-black/20",
-                card.matched ? "ring-2 ring-emerald-400/40" : "",
+                "aspect-square rounded-2xl border border-slate-200 dark:border-slate-700 text-2xl",
+                "grid place-items-center transition-all duration-200",
+                isOpen ? "bg-slate-200 dark:bg-slate-700" : "bg-slate-50 dark:bg-slate-800 hover:-translate-y-0.5 hover:bg-slate-100 dark:hover:bg-slate-800 hover:shadow-md",
+                card.matched ? "ring-2 ring-emerald-400 bg-emerald-50 dark:bg-emerald-950" : "",
               ].join(" ")}
             >
-              {isOpen ? card.value : "?"}
+              {/* key: al darse vuelta la carta el emoji entra animado */}
+              <span key={isOpen ? "abierta" : "cerrada"} className={isOpen ? "animate-pop" : ""}>
+                {isOpen ? card.value : "?"}
+              </span>
             </button>
           );
         })}

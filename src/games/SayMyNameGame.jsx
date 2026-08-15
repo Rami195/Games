@@ -58,47 +58,47 @@ const ROUNDS = [
 const TEAM_THEME = [
   {
     name: "Azul",
-    pageBg: "bg-gradient-to-br from-sky-950/35 via-slate-950/30 to-black/40",
-    border: "border-sky-400/25",
-    ring: "ring-sky-400/25",
-    softBg: "bg-sky-500/5",
-    dot: "text-sky-300",
-    badgeBg: "bg-sky-500/15",
-    badgeText: "text-sky-200",
-    word: "text-sky-200",
+    pageBg: "bg-gradient-to-br from-sky-50 dark:from-sky-950 via-white dark:via-slate-900 to-slate-50 dark:to-slate-800",
+    border: "border-sky-300 dark:border-sky-700",
+    ring: "ring-sky-400",
+    softBg: "bg-sky-50 dark:bg-sky-950",
+    dot: "text-sky-600 dark:text-sky-400",
+    badgeBg: "bg-sky-100 dark:bg-sky-900",
+    badgeText: "text-sky-700 dark:text-sky-300",
+    word: "text-sky-700 dark:text-sky-300",
   },
   {
     name: "Rojo",
-    pageBg: "bg-gradient-to-br from-rose-950/30 via-slate-950/30 to-black/40",
-    border: "border-rose-400/25",
-    ring: "ring-rose-400/25",
-    softBg: "bg-rose-500/5",
-    dot: "text-rose-300",
-    badgeBg: "bg-rose-500/15",
-    badgeText: "text-rose-200",
-    word: "text-rose-200",
+    pageBg: "bg-gradient-to-br from-rose-50 dark:from-rose-950 via-white dark:via-slate-900 to-slate-50 dark:to-slate-800",
+    border: "border-rose-300 dark:border-rose-700",
+    ring: "ring-rose-400",
+    softBg: "bg-rose-50 dark:bg-rose-950",
+    dot: "text-rose-600 dark:text-rose-400",
+    badgeBg: "bg-rose-100 dark:bg-rose-900",
+    badgeText: "text-rose-700 dark:text-rose-300",
+    word: "text-rose-700 dark:text-rose-300",
   },
   {
     name: "Verde",
-    pageBg: "bg-gradient-to-br from-emerald-950/28 via-slate-950/30 to-black/40",
-    border: "border-emerald-400/25",
-    ring: "ring-emerald-400/25",
-    softBg: "bg-emerald-500/5",
-    dot: "text-emerald-300",
-    badgeBg: "bg-emerald-500/15",
-    badgeText: "text-emerald-200",
-    word: "text-emerald-200",
+    pageBg: "bg-gradient-to-br from-emerald-50 dark:from-emerald-950 via-white dark:via-slate-900 to-slate-50 dark:to-slate-800",
+    border: "border-emerald-300 dark:border-emerald-700",
+    ring: "ring-emerald-400",
+    softBg: "bg-emerald-50 dark:bg-emerald-950",
+    dot: "text-emerald-700 dark:text-emerald-300",
+    badgeBg: "bg-emerald-100 dark:bg-emerald-900",
+    badgeText: "text-emerald-700 dark:text-emerald-300",
+    word: "text-emerald-700 dark:text-emerald-300",
   },
   {
     name: "Violeta",
-    pageBg: "bg-gradient-to-br from-violet-950/28 via-slate-950/30 to-black/40",
-    border: "border-violet-400/25",
-    ring: "ring-violet-400/25",
-    softBg: "bg-violet-500/5",
-    dot: "text-violet-300",
-    badgeBg: "bg-violet-500/15",
-    badgeText: "text-violet-200",
-    word: "text-violet-200",
+    pageBg: "bg-gradient-to-br from-violet-50 dark:from-violet-950 via-white dark:via-slate-900 to-slate-50 dark:to-slate-800",
+    border: "border-violet-300 dark:border-violet-700",
+    ring: "ring-violet-400",
+    softBg: "bg-violet-50 dark:bg-violet-950",
+    dot: "text-violet-600 dark:text-violet-400",
+    badgeBg: "bg-violet-100 dark:bg-violet-900",
+    badgeText: "text-violet-700 dark:text-violet-300",
+    word: "text-violet-700 dark:text-violet-300",
   },
 ];
 
@@ -786,11 +786,11 @@ export default function SayMyNameGame({ onPlayingChange }) {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+      <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-2xl font-bold">🎤 Say My Name</h2>
-            <p className="text-slate-300">
+            <p className="text-slate-600 dark:text-slate-300">
               3 rondas (Mímica → 1 palabra → ⚡ Relámpago) + draft por participantes + mazo por ronda (se recarga).
             </p>
           </div>
@@ -800,22 +800,22 @@ export default function SayMyNameGame({ onPlayingChange }) {
               {!confirmReset ? (
                 <button
                   onClick={() => setConfirmReset(true)}
-                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm hover:bg-white/10"
+                  className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm hover:bg-slate-200 dark:hover:bg-slate-700"
                 >
                   Reiniciar
                 </button>
               ) : (
                 <>
-                  <span className="text-sm text-slate-300">¿Seguro?</span>
+                  <span className="text-sm text-slate-600 dark:text-slate-300">¿Seguro?</span>
                   <button
                     onClick={resetAll}
-                    className="rounded-xl bg-rose-500 px-3 py-2 text-sm font-semibold text-black hover:bg-rose-400"
+                    className="rounded-xl bg-rose-600 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-500"
                   >
                     Sí, reiniciar
                   </button>
                   <button
                     onClick={() => setConfirmReset(false)}
-                    className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm hover:bg-white/10"
+                    className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm hover:bg-slate-200 dark:hover:bg-slate-700"
                   >
                     Cancelar
                   </button>
@@ -828,12 +828,12 @@ export default function SayMyNameGame({ onPlayingChange }) {
 
       {/* SETUP */}
       {phase === "setup" && (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
           <h3 className="text-lg font-semibold">Configuración</h3>
 
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-sm text-slate-300">Equipos (2 a 4)</label>
+              <label className="text-sm text-slate-600 dark:text-slate-300">Equipos (2 a 4)</label>
               <input
                 type="text"
                 value={teamsCount}
@@ -849,12 +849,12 @@ export default function SayMyNameGame({ onPlayingChange }) {
                   if (Number.isNaN(n)) setTeamsCount("2");
                   else setTeamsCount(String(clampNumber(n, 2, 4)));
                 }}
-                className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
+                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-2 outline-none focus:bg-white dark:focus:bg-slate-800"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm text-slate-300">Tamaño del mazo total (ej: 30)</label>
+              <label className="text-sm text-slate-600 dark:text-slate-300">Tamaño del mazo total (ej: 30)</label>
               <input
                 type="text"
                 value={deckTotal}
@@ -870,20 +870,20 @@ export default function SayMyNameGame({ onPlayingChange }) {
                   if (Number.isNaN(n)) setDeckTotal("10");
                   else setDeckTotal(String(clampNumber(n, 10, 200)));
                 }}
-                className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
+                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-2 outline-none focus:bg-white dark:focus:bg-slate-800"
               />
-              <div className="text-xs text-slate-400">
+              <div className="text-xs text-slate-500 dark:text-slate-400">
                 Debe ser múltiplo del total de participantes ({totalParticipants}).
               </div>
             </div>
 
             {/* ✅ tiempos por ronda */}
             <div className="space-y-2 sm:col-span-2">
-              <label className="text-sm text-slate-300">Tiempo por ronda (segundos)</label>
+              <label className="text-sm text-slate-600 dark:text-slate-300">Tiempo por ronda (segundos)</label>
               <div className="grid gap-2 sm:grid-cols-3">
                 {ROUNDS.map((r, idx) => (
-                  <div key={r.id} className="rounded-xl border border-white/10 bg-black/20 p-3">
-                    <div className="text-xs text-slate-300 mb-2">{r.name}</div>
+                  <div key={r.id} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-3">
+                    <div className="text-xs text-slate-600 dark:text-slate-300 mb-2">{r.name}</div>
                     <input
                       type="text"
                       value={roundSeconds[idx] ?? String(r.defaultSeconds)}
@@ -900,25 +900,25 @@ export default function SayMyNameGame({ onPlayingChange }) {
                         const safe = Number.isNaN(n) ? r.defaultSeconds : clampNumber(n, 5, 300);
                         setRoundSeconds((prev) => prev.map((x, i) => (i === idx ? String(safe) : x)));
                       }}
-                      className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
+                      className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-2 outline-none focus:bg-white dark:focus:bg-slate-800"
                     />
-                    <div className="mt-2 text-xs text-slate-400">Min: 5s • Max: 300s</div>
+                    <div className="mt-2 text-xs text-slate-500 dark:text-slate-400">Min: 5s • Max: 300s</div>
                   </div>
                 ))}
               </div>
-              <div className="text-xs text-slate-400 mt-2">
+              <div className="text-xs text-slate-500 dark:text-slate-400 mt-2">
                 El equipo que empieza la Ronda 1 es <b>al azar</b> y en cada ronda siguiente empieza el <b>siguiente equipo</b>.
               </div>
             </div>
 
             <div className="space-y-2 sm:col-span-2">
-              <label className="text-sm text-slate-300">Integrantes por equipo</label>
+              <label className="text-sm text-slate-600 dark:text-slate-300">Integrantes por equipo</label>
               <div className="grid gap-2 sm:grid-cols-2">
                 {Array.from({ length: safeTeamsForUI }, (_, i) => {
                   const t = TEAM_THEME[i] ?? TEAM_THEME[0];
                   return (
-                    <div key={i} className="rounded-xl border border-white/10 bg-black/20 p-3">
-                      <div className="text-xs text-slate-300 mb-2">
+                    <div key={i} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-3">
+                      <div className="text-xs text-slate-600 dark:text-slate-300 mb-2">
                         Equipo {i + 1}{" "}
                         <span
                           className={[
@@ -947,18 +947,18 @@ export default function SayMyNameGame({ onPlayingChange }) {
                           const safe = Number.isNaN(n) ? 2 : clampNumber(n, 1, 12);
                           setMembersPerTeam((prev) => prev.map((x, idx) => (idx === i ? String(safe) : x)));
                         }}
-                        className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
+                        className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-2 outline-none focus:bg-white dark:focus:bg-slate-800"
                       />
                     </div>
                   );
                 })}
               </div>
 
-              <div className="mt-2 rounded-xl border border-white/10 bg-black/20 p-4 text-sm text-slate-200">
+              <div className="mt-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4 text-sm text-slate-700 dark:text-slate-200">
                 <div>
                   Participantes totales: <b>{totalParticipants}</b>
                 </div>
-                <div className="mt-1 text-slate-300">
+                <div className="mt-1 text-slate-600 dark:text-slate-300">
                   {draftValidMultiple ? (
                     <>
                       Cada participante verá <b>{sampleCount}</b> cartas y elegirá <b>{quota}</b>. (Mazo final:{" "}
@@ -975,7 +975,7 @@ export default function SayMyNameGame({ onPlayingChange }) {
             </div>
 
             <div className="space-y-2 sm:col-span-2">
-              <label className="text-sm text-slate-300">Categorías (podés elegir varias)</label>
+              <label className="text-sm text-slate-600 dark:text-slate-300">Categorías (podés elegir varias)</label>
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                 {categories.map((cat) => {
                   const checked = selectedCategories.includes(cat);
@@ -985,8 +985,8 @@ export default function SayMyNameGame({ onPlayingChange }) {
                       className={[
                         "flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-sm transition",
                         checked
-                          ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-200"
-                          : "border-white/10 bg-black/30 text-slate-300 hover:bg-black/20",
+                          ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300"
+                          : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800",
                       ].join(" ")}
                     >
                       <input
@@ -1000,7 +1000,7 @@ export default function SayMyNameGame({ onPlayingChange }) {
                   );
                 })}
               </div>
-              <p className="text-xs text-slate-400">Cartas disponibles en selección: {poolCount}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Cartas disponibles en selección: {poolCount}</p>
             </div>
           </div>
 
@@ -1010,8 +1010,8 @@ export default function SayMyNameGame({ onPlayingChange }) {
             className={[
               "mt-6 w-full rounded-2xl px-5 py-3 font-semibold transition",
               !canStartDraft || !draftValidMultiple
-                ? "cursor-not-allowed bg-emerald-500/20 text-emerald-200/40"
-                : "cursor-pointer bg-emerald-500 text-black hover:bg-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.6)]",
+                ? "cursor-not-allowed bg-emerald-100 dark:bg-emerald-900 text-emerald-700/40 dark:text-emerald-300/40"
+                : "cursor-pointer bg-emerald-600 text-white hover:bg-emerald-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.6)]",
             ].join(" ")}
           >
             Comenzar (selección de cartas)
@@ -1028,14 +1028,14 @@ export default function SayMyNameGame({ onPlayingChange }) {
         const mustPick = p.quota;
 
         return (
-          <div className={["rounded-2xl border p-6 space-y-4 border-white/10", t.pageBg, t.softBg].join(" ")}>
+          <div className={["rounded-2xl border p-6 space-y-4 border-slate-200 dark:border-slate-700", t.pageBg, t.softBg].join(" ")}>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="text-sm text-slate-300">Selección de cartas</div>
+                <div className="text-sm text-slate-600 dark:text-slate-300">Selección de cartas</div>
                 <div className="text-xl font-bold">
                   <span className={t.badgeText}>{p.label}</span>
                 </div>
-                <div className="text-xs text-slate-400 mt-1">
+                <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                   Participante {draftIndex + 1}/{draftParticipants.length} • Elegí {p.quota} de {p.sampleCount}
                 </div>
               </div>
@@ -1053,7 +1053,7 @@ export default function SayMyNameGame({ onPlayingChange }) {
                       setSecondsLeft(0);
                     }
                   }}
-                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm hover:bg-white/10"
+                  className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm hover:bg-slate-200 dark:hover:bg-slate-700"
                 >
                   Volver a configuración
                 </button>
@@ -1061,10 +1061,10 @@ export default function SayMyNameGame({ onPlayingChange }) {
                 <button
                   onClick={nextParticipantDraft}
                   className={[
-                    "rounded-xl px-4 py-2 text-sm font-semibold text-black transition",
+                    "rounded-xl px-4 py-2 text-sm font-semibold text-white transition",
                     pickedCount === mustPick
-                      ? "bg-emerald-500 hover:bg-emerald-400 cursor-pointer"
-                      : "bg-emerald-500/40 cursor-not-allowed",
+                      ? "bg-emerald-600 hover:bg-emerald-500 cursor-pointer"
+                      : "bg-emerald-300 dark:bg-emerald-800 cursor-not-allowed",
                   ].join(" ")}
                   disabled={pickedCount !== mustPick}
                 >
@@ -1073,11 +1073,11 @@ export default function SayMyNameGame({ onPlayingChange }) {
               </div>
             </div>
 
-            <div className={["rounded-xl border bg-black/20 p-4", t.border].join(" ")}>
-              <div className="text-slate-200">
+            <div className={["rounded-xl border bg-slate-50 dark:bg-slate-800 p-4", t.border].join(" ")}>
+              <div className="text-slate-700 dark:text-slate-200">
                 Seleccionadas: <b className={t.badgeText}>{pickedCount}</b> / {mustPick}
               </div>
-              <div className="text-xs text-slate-400 mt-1">
+              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                 Tocá una tarjeta para marcarla. No podés elegir más de {mustPick}.
               </div>
             </div>
@@ -1093,14 +1093,14 @@ export default function SayMyNameGame({ onPlayingChange }) {
                       "text-left rounded-2xl border p-4 transition",
                       checked
                         ? [t.border, t.softBg, "ring-2", t.ring].join(" ")
-                        : "border-white/10 bg-black/20 hover:bg-black/30",
+                        : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700",
                     ].join(" ")}
                   >
-                    <div className="text-xs text-slate-400">{c.category}</div>
-                    <div className={["text-lg font-bold", checked ? t.badgeText : "text-white"].join(" ")}>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">{c.category}</div>
+                    <div className={["text-lg font-bold", checked ? t.badgeText : "text-slate-900 dark:text-slate-50"].join(" ")}>
                       {c.answer}
                     </div>
-                    <div className="mt-2 text-xs text-slate-400">{checked ? "✅ Seleccionada" : "Tocar para seleccionar"}</div>
+                    <div className="mt-2 text-xs text-slate-500 dark:text-slate-400">{checked ? "✅ Seleccionada" : "Tocar para seleccionar"}</div>
                   </button>
                 );
               })}
@@ -1111,13 +1111,13 @@ export default function SayMyNameGame({ onPlayingChange }) {
 
       {/* PLAY */}
       {phase === "play" && (
-        <div className={["rounded-2xl border p-6 space-y-4 border-white/10", theme.pageBg, theme.softBg].join(" ")}>
+        <div className={["rounded-2xl border p-6 space-y-4 border-slate-200 dark:border-slate-700", theme.pageBg, theme.softBg].join(" ")}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <div className="text-sm text-slate-300">{round.name}</div>
+              <div className="text-sm text-slate-600 dark:text-slate-300">{round.name}</div>
 
               <div className="text-xl font-bold flex flex-wrap items-center gap-2">
-                <span className={["inline-flex items-center gap-2 rounded-xl border px-3 py-1.5 bg-black/20", theme.border].join(" ")}>
+                <span className={["inline-flex items-center gap-2 rounded-xl border px-3 py-1.5 bg-slate-50 dark:bg-slate-800", theme.border].join(" ")}>
                   <span className={theme.dot}>●</span>
                   Equipo {currentTeam + 1}
                   <span className={["ml-2 rounded-lg px-2 py-0.5 text-[11px]", theme.badgeBg, theme.badgeText].join(" ")}>
@@ -1125,39 +1125,48 @@ export default function SayMyNameGame({ onPlayingChange }) {
                   </span>
                 </span>
 
-                <span className="text-slate-400 font-normal">
+                <span className="text-slate-500 dark:text-slate-400 font-normal">
                   Integrante {currentSlot + 1}/{membersThisTeam}
                 </span>
 
-                <span className="text-slate-500 font-normal">
+                <span className="text-slate-400 dark:text-slate-500 font-normal">
                   • empieza ronda: <b>Equipo {getRoundStartTeam(roundIndex) + 1}</b>
                 </span>
               </div>
 
-              <div className="mt-1 text-xs text-slate-400">
+              <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                 Turnos en esta ronda: {Math.min(turnsDone, totalTurnsThisRound)}/{totalTurnsThisRound} • Cartas restantes: {deck.length}
               </div>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className={["rounded-2xl border bg-black/30 px-4 py-2 font-mono text-lg", theme.border].join(" ")}>
+              <span
+                className={[
+                  "rounded-2xl border bg-slate-50 dark:bg-slate-800 px-4 py-2 font-mono text-lg",
+                  theme.border,
+                  // Late en rojo en los últimos 10 segundos del turno
+                  running && secondsLeft > 0 && secondsLeft <= 10
+                    ? "animate-heartbeat border-rose-300 dark:border-rose-700 font-bold text-rose-600 dark:text-rose-400"
+                    : "",
+                ].join(" ")}
+              >
                 {formatTime(secondsLeft)}
               </span>
 
               <button
                 onClick={running ? pauseResume : startTurn}
-                className={["rounded-xl border bg-white/5 px-4 py-2 text-sm hover:bg-white/10", theme.border].join(" ")}
+                className={["rounded-xl border bg-white dark:bg-slate-900 px-4 py-2 text-sm hover:bg-slate-200 dark:hover:bg-slate-700", theme.border].join(" ")}
               >
                 {running ? "Pausar" : "Iniciar turno"}
               </button>
             </div>
           </div>
 
-          <div className={["rounded-xl border bg-black/20 p-4 text-sm", theme.border].join(" ")}>
-            <div className="text-emerald-200">
+          <div className={["rounded-xl border bg-slate-50 dark:bg-slate-800 p-4 text-sm", theme.border].join(" ")}>
+            <div className="text-emerald-700 dark:text-emerald-300">
               <b>Podés:</b> {round.can}
             </div>
-            <div className="mt-1 text-rose-200">
+            <div className="mt-1 text-rose-700 dark:text-rose-300">
               <b>No podés:</b> {round.cant}
             </div>
           </div>
@@ -1170,8 +1179,8 @@ export default function SayMyNameGame({ onPlayingChange }) {
               className={[
                 "w-full rounded-2xl px-5 py-3 font-semibold transition",
                 !topCard || !running
-                  ? "cursor-not-allowed bg-white/5 text-slate-400"
-                  : "cursor-pointer bg-emerald-500 text-black hover:bg-emerald-400",
+                  ? "cursor-not-allowed bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400"
+                  : "cursor-pointer bg-emerald-600 text-white hover:bg-emerald-500",
               ].join(" ")}
             >
               ✅ Adivinada (+1)
@@ -1188,8 +1197,8 @@ export default function SayMyNameGame({ onPlayingChange }) {
                     className={[
                       "w-full rounded-2xl px-5 py-3 font-semibold transition",
                       !topCard || !running
-                        ? "cursor-not-allowed bg-white/5 text-slate-400"
-                        : ["cursor-pointer bg-emerald-500 text-black hover:bg-emerald-400", "border", tt.border].join(" "),
+                        ? "cursor-not-allowed bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400"
+                        : ["cursor-pointer bg-emerald-600 text-white hover:bg-emerald-500", "border", tt.border].join(" "),
                     ].join(" ")}
                   >
                     ✅ Adivinada (+1) — Equipo {i + 1}
@@ -1201,15 +1210,15 @@ export default function SayMyNameGame({ onPlayingChange }) {
 
           {/* Card */}
           {!running ? (
-            <div className={["rounded-2xl border bg-black/20 p-8 text-center", theme.border].join(" ")}>
-              <div className="text-sm text-slate-300 mb-2">Turno preparado</div>
+            <div className={["rounded-2xl border bg-slate-50 dark:bg-slate-800 p-8 text-center", theme.border].join(" ")}>
+              <div className="text-sm text-slate-600 dark:text-slate-300 mb-2">Turno preparado</div>
               <div className="text-2xl font-black">
                 <span className={theme.badgeText}>Equipo {currentTeam + 1}</span> • Integrante {currentSlot + 1}/{membersThisTeam}
               </div>
-              <div className="mt-2 text-slate-300">
+              <div className="mt-2 text-slate-600 dark:text-slate-300">
                 Tocá <b>Iniciar turno</b> para mostrar la tarjeta y empezar el tiempo.
               </div>
-              <div className="mt-2 text-xs text-slate-400">
+              <div className="mt-2 text-xs text-slate-500 dark:text-slate-400">
                 {isLightning
                   ? "En ⚡ Relámpago, adivinan todos: el punto se lo das al equipo que acertó."
                   : "El punto va al equipo del turno."}
@@ -1229,7 +1238,7 @@ export default function SayMyNameGame({ onPlayingChange }) {
             onClick={passCard}
             disabled={!topCard || !running}
             className={[
-              "w-full rounded-2xl border bg-white/5 px-5 py-3 font-semibold transition hover:bg-white/10",
+              "w-full rounded-2xl border bg-white dark:bg-slate-900 px-5 py-3 font-semibold transition hover:bg-slate-200 dark:hover:bg-slate-700",
               theme.border,
               !topCard || !running ? "cursor-not-allowed opacity-50" : "cursor-pointer",
             ].join(" ")}
@@ -1237,7 +1246,7 @@ export default function SayMyNameGame({ onPlayingChange }) {
             ↩ Pasar
           </button>
 
-          <div className="text-xs text-slate-400">
+          <div className="text-xs text-slate-500 dark:text-slate-400">
             Si se acaban las cartas, <b>termina la ronda</b> y pasa automáticamente a la siguiente (recargando el mazo).<br />
             El equipo que empieza la Ronda 1 es <b>al azar</b> y luego rota: R2 empieza el siguiente, R3 el siguiente.
           </div>
@@ -1246,28 +1255,28 @@ export default function SayMyNameGame({ onPlayingChange }) {
 
       {/* RESULTS */}
       {phase === "results" && (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
           <h3 className="text-lg font-semibold">Resultado final</h3>
 
-          <div className="mt-3 rounded-xl border border-white/10 bg-black/20 p-4">
+          <div className="mt-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4">
             <div className="text-lg font-bold">{finalWinnerText}</div>
 
-            <div className="mt-2 text-sm text-slate-300">
+            <div className="mt-2 text-sm text-slate-600 dark:text-slate-300">
               Puntos totales: {roundScores.map((v, i) => `E${i + 1}: ${v}`).join(" • ")}
             </div>
 
-            <div className="mt-2 text-sm text-slate-300">
+            <div className="mt-2 text-sm text-slate-600 dark:text-slate-300">
               Marcador global: {globalWins.map((v, i) => `E${i + 1}: ${v}`).join(" • ")}
             </div>
 
-            <div className="mt-4 text-sm font-semibold text-slate-200">Ganador por ronda</div>
+            <div className="mt-4 text-sm font-semibold text-slate-700 dark:text-slate-200">Ganador por ronda</div>
             <div className="mt-2 space-y-2">
               {perRoundWinners.map((r, idx) => (
-                <div key={idx} className="rounded-xl border border-white/10 bg-black/20 p-3">
-                  <div className="text-sm text-slate-200">
+                <div key={idx} className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-3">
+                  <div className="text-sm text-slate-700 dark:text-slate-200">
                     <b>{r.roundName}:</b> {r.winner === "Empate" ? "Empate" : `Ganó ${r.winner}`}
                   </div>
-                  <div className="text-xs text-slate-400 mt-1">
+                  <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                     {r.row.map((v, i) => `E${i + 1}: ${v}`).join(" • ")}
                   </div>
                 </div>
@@ -1275,13 +1284,13 @@ export default function SayMyNameGame({ onPlayingChange }) {
             </div>
 
             {finalWinner === "Empate" && (
-              <div className="mt-3 text-xs text-slate-400">Hubo empate en el total: no se sumó +1 global a ningún equipo.</div>
+              <div className="mt-3 text-xs text-slate-500 dark:text-slate-400">Hubo empate en el total: no se sumó +1 global a ningún equipo.</div>
             )}
           </div>
 
           <button
             onClick={() => setPhase("setup")}
-            className="mt-6 w-full rounded-2xl bg-white/10 px-5 py-3 font-semibold hover:bg-white/15"
+            className="mt-6 w-full rounded-2xl bg-slate-200 dark:bg-slate-700 px-5 py-3 font-semibold hover:bg-slate-300 dark:hover:bg-slate-600"
           >
             Volver a configuración
           </button>
@@ -1293,8 +1302,12 @@ export default function SayMyNameGame({ onPlayingChange }) {
 
 function AlwaysVisibleCard({ category, value, borderClass, wordClass, tintClass }) {
   return (
-    <div className={["relative h-40 w-full overflow-hidden rounded-2xl border bg-black/30 p-5", borderClass, tintClass].join(" ")}>
-      <div className="text-sm text-slate-300">Categoría</div>
+    // key en el valor: cada carta nueva entra animada
+    <div
+      key={value}
+      className={["animate-flip-in relative h-40 w-full overflow-hidden rounded-2xl border bg-slate-50 dark:bg-slate-800 p-5 shadow-sm", borderClass, tintClass].join(" ")}
+    >
+      <div className="text-sm text-slate-600 dark:text-slate-300">Categoría</div>
       <div className="mt-1 text-xl font-bold">{category}</div>
 
       <div className="h-full -mt-2 grid place-items-center">

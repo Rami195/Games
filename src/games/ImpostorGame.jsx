@@ -164,6 +164,12 @@ export default function ImpostorGame() {
   const [impostorIndexes, setImpostorIndexes] = useState(() => savedState?.impostorIndexes ?? []);
   const [openPlayerId, setOpenPlayerId] = useState(() => savedState?.openPlayerId ?? null);
 
+  // Reveal de a uno: turno actual y si el jugador actual ya vio su rol
+  const [revealIndex, setRevealIndex] = useState(() => savedState?.revealIndex ?? 0);
+  const [hasRevealedCurrent, setHasRevealedCurrent] = useState(
+    () => savedState?.hasRevealedCurrent ?? false
+  );
+
   // Debate timer
   const [debateSecondsLeft, setDebateSecondsLeft] = useState(() => savedState?.debateSecondsLeft ?? 0);
   const [isTimerRunning, setIsTimerRunning] = useState(() => savedState?.isTimerRunning ?? false);
@@ -202,6 +208,8 @@ export default function ImpostorGame() {
       players,
       impostorIndexes,
       openPlayerId,
+      revealIndex,
+      hasRevealedCurrent,
       debateSecondsLeft,
       isTimerRunning,
     };
@@ -216,6 +224,8 @@ export default function ImpostorGame() {
     players,
     impostorIndexes,
     openPlayerId,
+    revealIndex,
+    hasRevealedCurrent,
     debateSecondsLeft,
     isTimerRunning,
     savedState?.playersCount,
@@ -285,6 +295,8 @@ export default function ImpostorGame() {
 
     setPlayers(newPlayers);
     setOpenPlayerId(null);
+    setRevealIndex(0);
+    setHasRevealedCurrent(false);
 
     setPhase("reveal");
     setIsTimerRunning(false);
@@ -293,11 +305,27 @@ export default function ImpostorGame() {
 
   function toggleReveal(playerId) {
     setOpenPlayerId((current) => (current === playerId ? null : playerId));
+    setHasRevealedCurrent(true);
+  }
+
+  // Pasa el turno al siguiente jugador, tapando la card antes de entregar el dispositivo.
+  function nextPlayer() {
+    setOpenPlayerId(null);
+    setHasRevealedCurrent(false);
+    setRevealIndex((i) => i + 1);
+  }
+
+  function restartReveal() {
+    setOpenPlayerId(null);
+    setHasRevealedCurrent(false);
+    setRevealIndex(0);
+    setPhase("reveal");
   }
 
   function beginDebate() {
     const dMins = clamp(debateMinutesNum || 3, 1, 15);
     setOpenPlayerId(null);
+    setHasRevealedCurrent(false);
     setPhase("debate");
     setDebateSecondsLeft(dMins * 60);
     setIsTimerRunning(true);
@@ -315,6 +343,8 @@ export default function ImpostorGame() {
     setPlayers([]);
     setImpostorIndexes([]);
     setOpenPlayerId(null);
+    setRevealIndex(0);
+    setHasRevealedCurrent(false);
     setIsTimerRunning(false);
     setDebateSecondsLeft(0);
 
@@ -327,20 +357,25 @@ export default function ImpostorGame() {
 
   const totalWords = selectedCategories.reduce((acc, c) => acc + (WORD_BANK[c]?.length ?? 0), 0);
 
+  // Reveal de a uno: jugador del turno actual (índice defensivo por si viene de localStorage)
+  const safeRevealIndex = players.length ? clamp(revealIndex, 0, players.length - 1) : 0;
+  const currentPlayer = players[safeRevealIndex] ?? null;
+  const isLastPlayer = players.length > 0 && safeRevealIndex === players.length - 1;
+
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+      <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-2xl font-bold">🕵️‍♂️ El Impostor</h2>
-            <p className="text-slate-300">Revelen su rol en secreto, debatan y encuentren al impostor.</p>
+            <p className="text-slate-600 dark:text-slate-300">Revelen su rol en secreto, debatan y encuentren al impostor.</p>
           </div>
 
           {phase !== "setup" && (
             <button
               onClick={resetAll}
-              className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm hover:bg-white/10"
+              className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm hover:bg-slate-200 dark:hover:bg-slate-700"
             >
               Reiniciar
             </button>
@@ -350,12 +385,12 @@ export default function ImpostorGame() {
 
       {/* SETUP */}
       {phase === "setup" && (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
           <h3 className="text-lg font-semibold">Configuración</h3>
 
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-sm text-slate-300">Cantidad de jugadores (min 3)</label>
+              <label className="text-sm text-slate-600 dark:text-slate-300">Cantidad de jugadores (min 3)</label>
               <input
                 type="text"
                 value={playersCount}
@@ -374,13 +409,13 @@ export default function ImpostorGame() {
                     setPlayersCount(String(clamp(n, 3, 20)));
                   }
                 }}
-                className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
+                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-2 outline-none focus:bg-white dark:focus:bg-slate-800"
               />
 
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm text-slate-300">Cantidad de impostores (1 a {maxImpostors})</label>
+              <label className="text-sm text-slate-600 dark:text-slate-300">Cantidad de impostores (1 a {maxImpostors})</label>
               <input
                 type="number"
                 value={impostorsCount}
@@ -397,16 +432,16 @@ export default function ImpostorGame() {
                   if (Number.isNaN(n)) setImpostorsCount("1");
                   else setImpostorsCount(String(clamp(n, 1, maxImpostors)));
                 }}
-                className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
+                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-2 outline-none focus:bg-white dark:focus:bg-slate-800"
               />
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Recomendación: 1 impostor hasta 6 jugadores; 2 impostores a partir de 7-10.
               </p>
             </div>
 
             {/* Checklist de categorías */}
             <div className="space-y-2 sm:col-span-2">
-              <label className="text-sm text-slate-300">Categorías (podés elegir varias)</label>
+              <label className="text-sm text-slate-600 dark:text-slate-300">Categorías (podés elegir varias)</label>
 
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                 {categories.map((cat) => {
@@ -417,8 +452,8 @@ export default function ImpostorGame() {
                       className={[
                         "flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-sm transition",
                         checked
-                          ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-200"
-                          : "border-white/10 bg-black/30 text-slate-300 hover:bg-black/20",
+                          ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300"
+                          : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800",
                       ].join(" ")}
                     >
                       <input
@@ -433,11 +468,11 @@ export default function ImpostorGame() {
                 })}
               </div>
 
-              <p className="text-xs text-slate-400">Palabras disponibles: {totalWords}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Palabras disponibles: {totalWords}</p>
             </div>
 
             <div className="space-y-2 sm:col-span-2">
-              <label className="text-sm text-slate-300">Tiempo de debate (minutos)</label>
+              <label className="text-sm text-slate-600 dark:text-slate-300">Tiempo de debate (minutos)</label>
               <input
                 type="number"
                 value={debateMinutes}
@@ -454,7 +489,7 @@ export default function ImpostorGame() {
                   if (Number.isNaN(n)) setDebateMinutes("3");
                   else setDebateMinutes(String(clamp(n, 1, 15)));
                 }}
-                className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-2 outline-none focus:bg-black/20"
+                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-2 outline-none focus:bg-white dark:focus:bg-slate-800"
               />
             </div>
           </div>
@@ -465,14 +500,14 @@ export default function ImpostorGame() {
             className={[
               "mt-6 w-full rounded-2xl px-5 py-3 font-semibold transition",
               selectedCategories.length === 0
-                ? "cursor-not-allowed bg-emerald-500/20 text-emerald-200/40"
-                : "cursor-pointer bg-emerald-800 text-white hover:bg-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.6)]",
+                ? "cursor-not-allowed bg-emerald-100 dark:bg-emerald-900 text-emerald-700/40 dark:text-emerald-300/40"
+                : "cursor-pointer bg-emerald-600 text-slate-900 dark:text-slate-50 hover:bg-emerald-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.6)]",
             ].join(" ")}
           >
             Comenzar juego
           </button>
 
-          <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4 text-sm text-slate-200">
+          <div className="mt-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4 text-sm text-slate-700 dark:text-slate-200">
             <b>Cómo se juega:</b> Cada jugador ve su palabra/rol en secreto. Tripulantes ven la palabra.
             Impostores ven “IMPOSTOR”. Luego debaten y votan.
           </div>
@@ -481,75 +516,117 @@ export default function ImpostorGame() {
 
       {/* REVEAL */}
       {phase === "reveal" && (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h3 className="text-lg font-semibold">Revelar roles</h3>
-              <p className="text-slate-300 text-sm">Cada jugador toca su card para ver su rol.</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">
+                Un jugador por vez: mirá tu rol y pasá el dispositivo al siguiente.
+              </p>
             </div>
 
-            <button
-              onClick={beginDebate}
-              className="rounded-2xl bg-white/10 px-5 py-3 font-semibold hover:bg-white/15"
-            >
-              Iniciar debate ({clamp(debateMinutesNum || 3, 1, 15)} min)
-            </button>
+            <span className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-2 text-sm text-slate-700 dark:text-slate-200">
+              Turno {safeRevealIndex + 1} de {players.length}
+            </span>
           </div>
 
-          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {players.map((p) => (
-              <SimpleRevealCard
+          {/* Progreso */}
+          <div className="mt-4 flex flex-wrap gap-1.5">
+            {players.map((p, i) => (
+              <span
                 key={p.id}
-                title={p.name}
-                isOpen={openPlayerId === p.id}
-                onToggle={() => toggleReveal(p.id)}
+                className={[
+                  "h-1.5 flex-1 min-w-[16px] rounded-full transition",
+                  i < safeRevealIndex
+                    ? "bg-emerald-500"
+                    : i === safeRevealIndex
+                      ? "bg-white dark:bg-slate-900"
+                      : "bg-slate-200 dark:bg-slate-700",
+                ].join(" ")}
+              />
+            ))}
+          </div>
+
+          {currentPlayer && (
+            <div className="mx-auto mt-5 max-w-md">
+              <p className="mb-3 text-center text-sm text-slate-600 dark:text-slate-300">
+                Le toca a <b className="text-slate-900 dark:text-slate-50">{currentPlayer.name}</b>. Que nadie más mire la pantalla.
+              </p>
+
+              <SimpleRevealCard
+                title={currentPlayer.name}
+                isOpen={openPlayerId === currentPlayer.id}
+                onToggle={() => toggleReveal(currentPlayer.id)}
                 backContent={
-                  p.isImpostor ? (
+                  currentPlayer.isImpostor ? (
                     <div className="text-center">
-                      <div className="text-4xl font-black tracking-wide text-rose-300">IMPOSTOR</div>
+                      <div className="text-4xl font-black tracking-wide text-rose-600 dark:text-rose-400">IMPOSTOR</div>
                     </div>
                   ) : (
                     <div className="text-center">
-                      <div className="text-sm text-slate-200 mb-2">La palabra es</div>
-                      <div className="text-4xl font-black tracking-wide text-emerald-200">{secretWord}</div>
+                      <div className="text-sm text-slate-700 dark:text-slate-200 mb-2">La palabra es</div>
+                      <div className="text-4xl font-black tracking-wide text-emerald-700 dark:text-emerald-300">{secretWord}</div>
                     </div>
                   )
                 }
               />
-            ))}
-          </div>
+
+              <button
+                onClick={isLastPlayer ? beginDebate : nextPlayer}
+                disabled={!hasRevealedCurrent}
+                className={[
+                  "mt-4 w-full rounded-2xl px-5 py-3 font-semibold transition",
+                  !hasRevealedCurrent
+                    ? "cursor-not-allowed bg-white dark:bg-slate-900 text-slate-400 dark:text-slate-500"
+                    : isLastPlayer
+                      ? "cursor-pointer bg-emerald-600 text-slate-900 dark:text-slate-50 hover:bg-emerald-500 hover:shadow-[0_0_20px_rgba(16,185,129,0.6)]"
+                      : "cursor-pointer bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600",
+                ].join(" ")}
+              >
+                {isLastPlayer
+                  ? `Iniciar debate (${clamp(debateMinutesNum || 3, 1, 15)} min)`
+                  : `Pasar a ${players[safeRevealIndex + 1]?.name ?? "el siguiente"} →`}
+              </button>
+
+              <p className="mt-3 text-center text-xs text-slate-500 dark:text-slate-400">
+                {hasRevealedCurrent
+                  ? "Tapá la card antes de pasar el dispositivo."
+                  : "Tocá la card para ver tu rol."}
+              </p>
+            </div>
+          )}
         </div>
       )}
 
       {/* DEBATE */}
       {phase === "debate" && (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h3 className="text-lg font-semibold">Debate</h3>
-              <p className="text-slate-300 text-sm">Hablen, hagan preguntas y voten al final.</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">Hablen, hagan preguntas y voten al final.</p>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="rounded-2xl border border-white/10 bg-black/30 px-4 py-2 font-mono text-lg">
+              <span className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-4 py-2 font-mono text-lg">
                 {formatTime(debateSecondsLeft)}
               </span>
               <button
                 onClick={pauseResume}
-                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm hover:bg-white/10"
+                className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm hover:bg-slate-200 dark:hover:bg-slate-700"
               >
                 {isTimerRunning ? "Pausar" : "Reanudar"}
               </button>
               <button
                 onClick={() => setPhase("results")}
-                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm hover:bg-white/10"
+                className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm hover:bg-slate-200 dark:hover:bg-slate-700"
               >
                 Terminar
               </button>
             </div>
           </div>
 
-          <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4 text-sm text-slate-200">
+          <div className="mt-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4 text-sm text-slate-700 dark:text-slate-200">
             <b>Regla sugerida:</b> Cada jugador da una pista sin decir la palabra. Luego ronda de preguntas rápidas.
           </div>
         </div>
@@ -557,38 +634,38 @@ export default function ImpostorGame() {
 
       {/* RESULTS */}
       {phase === "results" && (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h3 className="text-lg font-semibold">Resultados</h3>
-              <p className="text-slate-300 text-sm">Revelá impostores y palabra.</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">Revelá impostores y palabra.</p>
             </div>
 
             <button
-              onClick={() => setPhase("reveal")}
-              className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm hover:bg-white/10"
+              onClick={restartReveal}
+              className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm hover:bg-slate-200 dark:hover:bg-slate-700"
             >
               Volver a cards
             </button>
           </div>
 
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
-              <div className="text-sm text-slate-300">Palabra</div>
-              <div className="mt-2 text-3xl font-black tracking-wide text-emerald-200">{secretWord}</div>
+            <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-5">
+              <div className="text-sm text-slate-600 dark:text-slate-300">Palabra</div>
+              <div className="mt-2 text-3xl font-black tracking-wide text-emerald-700 dark:text-emerald-300">{secretWord}</div>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
-              <div className="text-sm text-slate-300">Impostores</div>
+            <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-5">
+              <div className="text-sm text-slate-600 dark:text-slate-300">Impostores</div>
               <div className="mt-2 space-y-1">
                 {impostorIndexes.length ? (
                   impostorIndexes.map((i) => (
-                    <div key={i} className="text-lg font-semibold text-rose-200">
+                    <div key={i} className="text-lg font-semibold text-rose-700 dark:text-rose-300">
                       Jugador {i + 1}
                     </div>
                   ))
                 ) : (
-                  <div className="text-slate-300">No hay datos.</div>
+                  <div className="text-slate-600 dark:text-slate-300">No hay datos.</div>
                 )}
               </div>
             </div>
@@ -596,7 +673,7 @@ export default function ImpostorGame() {
 
           <button
             onClick={startGame}
-            className="mt-6 w-full rounded-2xl bg-white/10 px-5 py-3 font-semibold hover:bg-white/15"
+            className="mt-6 w-full rounded-2xl bg-slate-200 dark:bg-slate-700 px-5 py-3 font-semibold hover:bg-slate-300 dark:hover:bg-slate-600"
           >
             Jugar otra ronda (misma config)
           </button>
@@ -614,36 +691,36 @@ function SimpleRevealCard({ title, isOpen, onToggle, backContent }) {
     <button
       type="button"
       onClick={onToggle}
-      className="relative h-36 w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 text-left"
+      className="relative h-56 w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-left shadow-sm transition hover:shadow-md"
     >
       {/* FRONT */}
       <div
         className={[
-          "absolute inset-0 p-4 transition-opacity duration-200",
-          isOpen ? "opacity-0" : "opacity-100",
+          "absolute inset-0 p-4 transition-all duration-300",
+          isOpen ? "scale-95 opacity-0" : "scale-100 opacity-100",
         ].join(" ")}
       >
         <div className="h-full flex flex-col justify-between">
           <div className="text-xl font-semibold">{title}</div>
-          <div className="text-sm text-slate-300">Tocá para mostrar</div>
+          <div className="text-sm text-slate-600 dark:text-slate-300">Tocá para mostrar</div>
         </div>
       </div>
 
       {/* BACK */}
       <div
         className={[
-          "absolute inset-0 p-4 transition-opacity duration-200 bg-black/40",
-          isOpen ? "opacity-100" : "opacity-0 pointer-events-none",
+          "absolute inset-0 p-4 transition-all duration-300 bg-slate-100 dark:bg-slate-900",
+          isOpen ? "scale-100 opacity-100" : "scale-105 opacity-0 pointer-events-none",
         ].join(" ")}
       >
         <div className="h-full flex flex-col justify-between">
-          <div className="text-sm text-slate-300">{title}</div>
+          <div className="text-sm text-slate-600 dark:text-slate-300">{title}</div>
 
           <div className="flex-1 grid place-items-center">
-            <div className="w-full text-center">{backContent}</div>
+            <div className={["w-full text-center", isOpen ? "animate-pop" : ""].join(" ")}>{backContent}</div>
           </div>
 
-          <div className="text-sm text-slate-300">Tocá para ocultar</div>
+          <div className="text-sm text-slate-600 dark:text-slate-300">Tocá para ocultar</div>
         </div>
       </div>
     </button>
